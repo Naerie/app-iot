@@ -1,20 +1,22 @@
 package com.dispensador.app.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dispensador.app.data.*
 import com.dispensador.app.firebase.FirebaseRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel principal unificado para el dispensador
- * Gestiona todo el estado y las operaciones del dispositivo
+ * ViewModel principal para gestionar el estado del dispensador
+ * Versión con manejo robusto de errores que no crashea
  */
 class DispenserViewModel : ViewModel() {
 
+    private val TAG = "DispenserViewModel"
+
+    // Repository se inicializa de forma segura
     private val repository = FirebaseRepository()
 
     // Estados observables
@@ -33,7 +35,7 @@ class DispenserViewModel : ViewModel() {
     private val _historial = MutableStateFlow<List<DispenserHistory>>(emptyList())
     val historial: StateFlow<List<DispenserHistory>> = _historial.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(true)
+    private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -42,293 +44,273 @@ class DispenserViewModel : ViewModel() {
     private val _operationState = MutableStateFlow<OperationState>(OperationState.Idle)
     val operationState: StateFlow<OperationState> = _operationState.asStateFlow()
 
+    private val _firebaseInitialized = MutableStateFlow(false)
+    val firebaseInitialized: StateFlow<Boolean> = _firebaseInitialized.asStateFlow()
+
     init {
-        startMonitoring()
+        Log.d(TAG, "DispenserViewModel inicializado")
+        verificarFirebase()
+        observarDatos()
     }
 
     /**
-     * Inicia el monitoreo de todos los datos en tiempo real
+     * Verifica si Firebase está inicializado
      */
-    private fun startMonitoring() {
-        // Monitorear estado del dispositivo
+    private fun verificarFirebase() {
+        try {
+            val initialized = repository.isInitialized()
+            _firebaseInitialized.value = initialized
+
+            if (!initialized) {
+                Log.e(TAG, "Firebase no está inicializado correctamente")
+                _errorMessage.value = "Firebase no está configurado. Verifica google-services.json"
+            } else {
+                Log.d(TAG, "Firebase inicializado correctamente")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al verificar Firebase", e)
+            _firebaseInitialized.value = false
+            _errorMessage.value = "Error al conectar con Firebase: ${e.message}"
+        }
+    }
+
+    /**
+     * Observar todos los datos de Firebase en tiempo real
+     */
+    private fun observarDatos() {
+        // Observar estado
         viewModelScope.launch {
-            repository.observarEstado().collect { result ->
-                result.onSuccess { estado ->
+            try {
+                repository.observarEstado().collect { estado ->
                     _estado.value = estado
                     _isLoading.value = false
-                    _errorMessage.value = null
-                }.onFailure { error ->
-                    _errorMessage.value = error.message
-                    _isLoading.value = false
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error observando estado", e)
+                _errorMessage.value = "Error al observar estado: ${e.message}"
+                _isLoading.value = false
             }
         }
 
-        // Monitorear control
+        // Observar control
         viewModelScope.launch {
-            repository.observarControl().collect { result ->
-                result.onSuccess { control ->
+            try {
+                repository.observarControl().collect { control ->
                     _control.value = control
-                }.onFailure { error ->
-                    _errorMessage.value = error.message
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error observando control", e)
+                _errorMessage.value = "Error al observar control: ${e.message}"
             }
         }
 
-        // Monitorear notificaciones
+        // Observar notificaciones
         viewModelScope.launch {
-            repository.observarNotificaciones().collect { result ->
-                result.onSuccess { notificacion ->
-                    _notificaciones.value = notificacion
-                }.onFailure { error ->
-                    _errorMessage.value = error.message
+            try {
+                repository.observarNotificaciones().collect { notificaciones ->
+                    _notificaciones.value = notificaciones
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error observando notificaciones", e)
+                _errorMessage.value = "Error al observar notificaciones: ${e.message}"
             }
         }
 
-        // Monitorear horarios
+        // Observar horarios
         viewModelScope.launch {
-            repository.observarHorarios().collect { result ->
-                result.onSuccess { horarios ->
+            try {
+                repository.observarHorarios().collect { horarios ->
                     _horarios.value = horarios
-                }.onFailure { error ->
-                    _errorMessage.value = error.message
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error observando horarios", e)
+                _errorMessage.value = "Error al observar horarios: ${e.message}"
             }
         }
 
-        // Monitorear historial
+        // Observar historial
         viewModelScope.launch {
-            repository.observarHistorial(50).collect { result ->
-                result.onSuccess { historial ->
+            try {
+                repository.observarHistorial().collect { historial ->
                     _historial.value = historial
-                }.onFailure { error ->
-                    _errorMessage.value = error.message
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error observando historial", e)
+                _errorMessage.value = "Error al observar historial: ${e.message}"
             }
         }
     }
 
-    // ==================== OPERACIONES DE CONTROL ====================
-
     /**
-     * Dispensa agua manualmente con la cantidad especificada
+     * Dispensar agua manualmente
      */
-    fun dispensarManual(cantidad: Int, usuario: String = "Usuario") {
+    fun dispensarManual(cantidad: Int) {
         viewModelScope.launch {
             _operationState.value = OperationState.Loading
-            
-            val result = repository.dispensarManual(cantidad, usuario)
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Dispensado: $cantidad ml")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al dispensar"
-                )
+            try {
+                val result = repository.dispensarManual(cantidad)
+                result.onSuccess {
+                    _operationState.value = OperationState.Success("Dispensando $cantidad ml")
+                }.onFailure { error ->
+                    _operationState.value = OperationState.Error(error.message ?: "Error al dispensar")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en dispensarManual", e)
+                _operationState.value = OperationState.Error(e.message ?: "Error al dispensar")
             }
         }
     }
 
     /**
-     * Detiene el motor del dispensador
+     * Detener el motor
      */
     fun detenerMotor() {
         viewModelScope.launch {
             _operationState.value = OperationState.Loading
-            
-            val result = repository.detenerMotor()
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Motor detenido")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al detener motor"
-                )
+            try {
+                val result = repository.detenerMotor()
+                result.onSuccess {
+                    _operationState.value = OperationState.Success("Motor detenido")
+                }.onFailure { error ->
+                    _operationState.value = OperationState.Error(error.message ?: "Error al detener motor")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en detenerMotor", e)
+                _operationState.value = OperationState.Error(e.message ?: "Error al detener motor")
             }
         }
     }
 
     /**
-     * Cambia el modo de operación (manual/automático)
+     * Cambiar modo manual/automático
      */
     fun cambiarModo(automatico: Boolean) {
         viewModelScope.launch {
-            _operationState.value = OperationState.Loading
-            
-            val result = repository.cambiarModo(automatico)
-            
-            result.onSuccess {
-                val modo = if (automatico) "Automático" else "Manual"
-                _operationState.value = OperationState.Success("Modo: $modo")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al cambiar modo"
-                )
+            try {
+                val result = repository.cambiarModo(automatico)
+                result.onFailure { error ->
+                    _errorMessage.value = error.message
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en cambiarModo", e)
+                _errorMessage.value = e.message
             }
         }
     }
 
     /**
-     * Activa o desactiva la programación
+     * Activar/desactivar programación
      */
     fun toggleProgramacion(activa: Boolean) {
         viewModelScope.launch {
-            _operationState.value = OperationState.Loading
-            
-            val result = repository.toggleProgramacion(activa)
-            
-            result.onSuccess {
-                val estado = if (activa) "activada" else "desactivada"
-                _operationState.value = OperationState.Success("Programación $estado")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al cambiar programación"
-                )
+            try {
+                val result = repository.toggleProgramacion(activa)
+                result.onFailure { error ->
+                    _errorMessage.value = error.message
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en toggleProgramacion", e)
+                _errorMessage.value = e.message
             }
         }
     }
 
     /**
-     * Actualiza el control completo del dispensador
+     * Agregar horario
      */
-    fun actualizarControl(control: DispenserControl) {
+    fun agregarHorario(horario: DispenserSchedule) {
         viewModelScope.launch {
             _operationState.value = OperationState.Loading
-            
-            val result = repository.actualizarControl(control)
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Control actualizado")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al actualizar control"
-                )
+            try {
+                val result = repository.agregarHorario(horario)
+                result.onSuccess {
+                    _operationState.value = OperationState.Success("Horario agregado")
+                }.onFailure { error ->
+                    _operationState.value = OperationState.Error(error.message ?: "Error al agregar horario")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en agregarHorario", e)
+                _operationState.value = OperationState.Error(e.message ?: "Error al agregar horario")
             }
         }
     }
 
-    // ==================== OPERACIONES DE HORARIOS ====================
+    /**
+     * Actualizar horario
+     */
+    fun actualizarHorario(horario: DispenserSchedule) {
+        viewModelScope.launch {
+            try {
+                val result = repository.actualizarHorario(horario)
+                result.onFailure { error ->
+                    _errorMessage.value = error.message
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en actualizarHorario", e)
+                _errorMessage.value = e.message
+            }
+        }
+    }
 
     /**
-     * Agrega un nuevo horario programado
+     * Eliminar horario
      */
-    fun agregarHorario(schedule: DispenserSchedule) {
+    fun eliminarHorario(horarioId: String) {
         viewModelScope.launch {
             _operationState.value = OperationState.Loading
-            
-            if (!schedule.esValido()) {
-                _operationState.value = OperationState.Error("Horario no válido")
-                return@launch
-            }
-            
-            val result = repository.agregarHorario(schedule)
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Horario agregado")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al agregar horario"
-                )
+            try {
+                val result = repository.eliminarHorario(horarioId)
+                result.onSuccess {
+                    _operationState.value = OperationState.Success("Horario eliminado")
+                }.onFailure { error ->
+                    _operationState.value = OperationState.Error(error.message ?: "Error al eliminar horario")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en eliminarHorario", e)
+                _operationState.value = OperationState.Error(e.message ?: "Error al eliminar horario")
             }
         }
     }
 
     /**
-     * Actualiza un horario existente
-     */
-    fun actualizarHorario(schedule: DispenserSchedule) {
-        viewModelScope.launch {
-            _operationState.value = OperationState.Loading
-            
-            if (!schedule.esValido()) {
-                _operationState.value = OperationState.Error("Horario no válido")
-                return@launch
-            }
-            
-            val result = repository.actualizarHorario(schedule)
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Horario actualizado")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al actualizar horario"
-                )
-            }
-        }
-    }
-
-    /**
-     * Elimina un horario programado
-     */
-    fun eliminarHorario(id: String) {
-        viewModelScope.launch {
-            _operationState.value = OperationState.Loading
-            
-            val result = repository.eliminarHorario(id)
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Horario eliminado")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al eliminar horario"
-                )
-            }
-        }
-    }
-
-    // ==================== OPERACIONES DE NOTIFICACIONES ====================
-
-    /**
-     * Limpia todas las notificaciones
+     * Limpiar notificaciones
      */
     fun limpiarNotificaciones() {
         viewModelScope.launch {
-            val result = repository.limpiarNotificaciones()
-            
-            result.onSuccess {
-                _operationState.value = OperationState.Success("Notificaciones limpiadas")
-            }.onFailure { error ->
-                _operationState.value = OperationState.Error(
-                    error.message ?: "Error al limpiar notificaciones"
-                )
+            try {
+                val result = repository.limpiarNotificaciones()
+                result.onFailure { error ->
+                    _errorMessage.value = error.message
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en limpiarNotificaciones", e)
+                _errorMessage.value = e.message
             }
         }
     }
 
-    // ==================== UTILIDADES ====================
-
     /**
-     * Limpia el mensaje de error
+     * Limpiar mensaje de error
      */
     fun clearError() {
         _errorMessage.value = null
     }
 
     /**
-     * Resetea el estado de operación
+     * Resetear estado de operación
      */
     fun resetOperationState() {
         _operationState.value = OperationState.Idle
     }
 
-    /**
-     * Obtiene el número de notificaciones activas
-     */
-    fun getNotificationCount(): Int {
-        return _notificaciones.value?.contarNotificaciones() ?: 0
-    }
-
-    /**
-     * Verifica si el dispositivo puede dispensar
-     */
-    fun puedeDispensar(): Boolean {
-        return _estado.value?.puedeDispensar() ?: false
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(TAG, "DispenserViewModel destruido")
     }
 }
 
 /**
- * Estados de operación unificados
+ * Estados de operación
  */
 sealed class OperationState {
     object Idle : OperationState()

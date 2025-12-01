@@ -1,0 +1,100 @@
+{
+  "dispensador": {
+    "estado": {
+      "conexion": true,
+      "encendido": false,
+      "enUso": false,
+      "nivelAgua": 75,
+      "tazaPresente": true,
+      "intensidadWifi": -55,
+      "ultimaActualizacion": 1704067200000,
+      "modo": "manual"
+    },
+    "control": {
+      "motorEncendido": false,
+      "cantidadDispensado": 250,
+      "modoAutomatico": false,
+      "programacionActiva": false,
+      "ultimaInstruccion": 0
+    },
+    "notificaciones": {
+      "nivelBajo": false,
+      "contenidoVacio": false,
+      "errorSistema": false,
+      "desconexion": false,
+      "mensaje": "",
+      "timestamp": 0
+    },
+    "horarios": {
+      "schedule_001": {
+        "id": "schedule_001",
+        "hora": "08:00",
+        "cantidad": 250,
+        "dias": [1, 2, 3, 4, 5],
+        "fechaEspecifica": 0,
+        "activo": true,
+        "fechaCreacion": 1704067200000
+      },
+      "schedule_002": {
+        "id": "schedule_002",
+        "hora": "14:00",
+        "cantidad": 200,
+        "dias": [1, 2, 3, 4, 5],
+        "fechaEspecifica": 0,
+        "activo": true,
+        "fechaCreacion": 1704067200000
+      },
+      "schedule_003": {
+        "id": "schedule_003",
+        "hora": "20:00",
+        "cantidad": 300,
+        "dias": [1, 2, 3, 4, 5, 6, 7],
+        "fechaEspecifica": 0,
+        "activo": false,
+        "fechaCreacion": 1704067200000
+      }
+    },
+    "historial": {
+      "1704067200000": {
+        "id": "1704067200000",
+        "timestamp": 1704067200000,
+        "cantidad": 250,
+        "tipo": "manual",
+        "usuario": "Usuario",
+        "exitoso": true
+      },
+      "1704153600000": {
+        "id": "1704153600000",
+        "timestamp": 1704153600000,
+        "cantidad": 200,
+        "tipo": "programado",
+        "usuario": "Sistema",
+        "exitoso": true
+      },
+      "1704240000000": {
+        "id": "1704240000000",
+        "timestamp": 1704240000000,
+        "cantidad": 300,
+        "tipo": "manual",
+        "usuario": "Usuario",
+        "exitoso": true
+      },
+      "1704326400000": {
+        "id": "1704326400000",
+        "timestamp": 1704326400000,
+        "cantidad": 250,
+        "tipo": "programado",
+        "usuario": "Sistema",
+        "exitoso": true
+      },
+      "1704412800000": {
+        "id": "1704412800000",
+        "timestamp": 1704412800000,
+        "cantidad": 150,
+        "tipo": "manual",
+        "usuario": "Usuario",
+        "exitoso": false
+      }
+    }
+  }
+}

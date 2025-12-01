@@ -26,48 +26,24 @@
     <uses-permission android:name="com.dispensador.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
+        android:name="com.dispensador.app.DispensadorApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/dispensador"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:testOnly="true"
-        android:theme="@style/Theme.Dispensador" >
-
-        <!-- MainActivity -->
+        android:testOnly="true" >
         <activity
             android:name="com.dispensador.app.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Dispensador" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Firebase Messaging Service (para notificaciones push) -->
-        <service
-            android:name="com.dispensador.app.services.FirebaseMessagingService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <!-- Metadata para Firebase -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_notification" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/notification_color" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
 
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"

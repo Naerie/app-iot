@@ -9,66 +9,106 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 /**
- * Repositorio de autenticación con Firebase Auth
+ * Repository para autenticación con Firebase
+ * Versión robusta que no crashea si Firebase no está configurado
  */
 class AuthRepository {
 
-    private val auth = FirebaseAuth.getInstance()
     private val TAG = "AuthRepository"
 
+    // Lazy initialization para evitar crashes
+    private val auth: FirebaseAuth? by lazy {
+        try {
+            FirebaseAuth.getInstance()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al obtener FirebaseAuth", e)
+            null
+        }
+    }
+
     /**
-     * Observa el estado de autenticación del usuario
+     * Verifica si Firebase Auth está disponible
      */
-    fun observarEstadoAuth(): Flow<FirebaseUser?> = callbackFlow {
-        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            trySend(firebaseAuth.currentUser)
-        }
-
-        auth.addAuthStateListener(listener)
-        
-        // Enviar estado inicial
-        trySend(auth.currentUser)
-
-        awaitClose {
-            auth.removeAuthStateListener(listener)
-            Log.d(TAG, "Listener de auth eliminado")
-        }
+    fun isInitialized(): Boolean {
+        return auth != null
     }
 
     /**
      * Obtiene el usuario actual
      */
-    fun obtenerUsuarioActual(): FirebaseUser? = auth.currentUser
+    fun getCurrentUser(): FirebaseUser? {
+        return try {
+            auth?.currentUser
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al obtener usuario actual", e)
+            null
+        }
+    }
 
     /**
-     * Verifica si hay un usuario autenticado
+     * Observa cambios en el estado de autenticación
      */
-    fun estaAutenticado(): Boolean = auth.currentUser != null
+    fun observeAuthState(): Flow<FirebaseUser?> = callbackFlow {
+        val firebaseAuth = auth
+        if (firebaseAuth == null) {
+            trySend(null)
+            close()
+            return@callbackFlow
+        }
+
+        val listener = FirebaseAuth.AuthStateListener { auth ->
+            trySend(auth.currentUser)
+        }
+
+        firebaseAuth.addAuthStateListener(listener)
+
+        awaitClose {
+            firebaseAuth.removeAuthStateListener(listener)
+        }
+    }
 
     /**
      * Inicia sesión con email y contraseña
      */
-    suspend fun iniciarSesion(email: String, password: String): Result<FirebaseUser> {
+    suspend fun signIn(email: String, password: String): Result<FirebaseUser> {
+        val firebaseAuth = auth
+        if (firebaseAuth == null) {
+            return Result.failure(Exception("Firebase Auth no está inicializado"))
+        }
+
         return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
-            val user = result.user ?: throw Exception("Usuario no encontrado")
-            Log.d(TAG, "Inicio de sesión exitoso: ${user.email}")
-            Result.success(user)
+            val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            val user = result.user
+            if (user != null) {
+                Log.d(TAG, "Login exitoso: ${user.email}")
+                Result.success(user)
+            } else {
+                Result.failure(Exception("Usuario no encontrado"))
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "Error en inicio de sesión", e)
+            Log.e(TAG, "Error en login", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Registra un nuevo usuario con email y contraseña
+     * Registra un nuevo usuario
      */
-    suspend fun registrarUsuario(email: String, password: String): Result<FirebaseUser> {
+    suspend fun signUp(email: String, password: String): Result<FirebaseUser> {
+        val firebaseAuth = auth
+        if (firebaseAuth == null) {
+            return Result.failure(Exception("Firebase Auth no está inicializado"))
+        }
+
         return try {
-            val result = auth.createUserWithEmailAndPassword(email, password).await()
-            val user = result.user ?: throw Exception("Error creando usuario")
-            Log.d(TAG, "Registro exitoso: ${user.email}")
-            Result.success(user)
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            val user = result.user
+            if (user != null) {
+                Log.d(TAG, "Registro exitoso: ${user.email}")
+                Result.success(user)
+            } else {
+                Result.failure(Exception("Error al crear usuario"))
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error en registro", e)
             Result.failure(e)
@@ -76,53 +116,32 @@ class AuthRepository {
     }
 
     /**
-     * Cierra la sesión del usuario actual
+     * Cierra sesión
      */
-    fun cerrarSesion() {
-        auth.signOut()
-        Log.d(TAG, "Sesión cerrada")
+    fun signOut() {
+        try {
+            auth?.signOut()
+            Log.d(TAG, "Sesión cerrada")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al cerrar sesión", e)
+        }
     }
 
     /**
      * Envía email de recuperación de contraseña
      */
-    suspend fun recuperarPassword(email: String): Result<Unit> {
+    suspend fun sendPasswordResetEmail(email: String): Result<Unit> {
+        val firebaseAuth = auth
+        if (firebaseAuth == null) {
+            return Result.failure(Exception("Firebase Auth no está inicializado"))
+        }
+
         return try {
-            auth.sendPasswordResetEmail(email).await()
+            firebaseAuth.sendPasswordResetEmail(email).await()
             Log.d(TAG, "Email de recuperación enviado a: $email")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error enviando email de recuperación", e)
-            Result.failure(e)
-        }
-    }
-
-    /**
-     * Actualiza el email del usuario
-     */
-    suspend fun actualizarEmail(nuevoEmail: String): Result<Unit> {
-        return try {
-            val user = auth.currentUser ?: throw Exception("Usuario no autenticado")
-            user.updateEmail(nuevoEmail).await()
-            Log.d(TAG, "Email actualizado a: $nuevoEmail")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error actualizando email", e)
-            Result.failure(e)
-        }
-    }
-
-    /**
-     * Actualiza la contraseña del usuario
-     */
-    suspend fun actualizarPassword(nuevaPassword: String): Result<Unit> {
-        return try {
-            val user = auth.currentUser ?: throw Exception("Usuario no autenticado")
-            user.updatePassword(nuevaPassword).await()
-            Log.d(TAG, "Contraseña actualizada")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error actualizando contraseña", e)
+            Log.e(TAG, "Error al enviar email de recuperación", e)
             Result.failure(e)
         }
     }

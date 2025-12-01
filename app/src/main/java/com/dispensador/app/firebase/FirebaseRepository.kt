@@ -9,16 +9,29 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 /**
  * Repositorio unificado para todas las operaciones de Firebase
- * Centraliza la lectura y escritura de datos del dispensador
+ * Versión con manejo robusto de errores
  */
 class FirebaseRepository {
 
-    private val database = FirebaseDatabase.getInstance()
     private val TAG = "FirebaseRepository"
+
+    // Inicialización lazy para evitar crashes
+    private val database: FirebaseDatabase? by lazy {
+        try {
+            FirebaseDatabase.getInstance().apply {
+                Log.d(TAG, "Firebase Database inicializado correctamente")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al inicializar Firebase Database", e)
+            null
+        }
+    }
 
     // Rutas unificadas de Firebase
     private companion object {
@@ -34,29 +47,31 @@ class FirebaseRepository {
     /**
      * Observa el estado del dispensador en tiempo real
      */
-    fun observarEstado(): Flow<Result<DispenserState>> = callbackFlow {
-        val reference = database.getReference(PATH_ESTADO)
+    fun observarEstado(): Flow<DispenserState?> = callbackFlow {
+        if (database == null) {
+            Log.e(TAG, "Database no inicializado, retornando estado por defecto")
+            trySend(DispenserState())
+            close()
+            return@callbackFlow
+        }
+
+        val reference = database!!.getReference(PATH_ESTADO)
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
-                    val estado = snapshot.getValue(DispenserState::class.java)
-                    if (estado != null) {
-                        Log.d(TAG, "Estado actualizado: $estado")
-                        trySend(Result.success(estado))
-                    } else {
-                        Log.w(TAG, "Estado es null, creando estado por defecto")
-                        trySend(Result.success(DispenserState()))
-                    }
+                    val estado = snapshot.getValue(DispenserState::class.java) ?: DispenserState()
+                    Log.d(TAG, "Estado actualizado: $estado")
+                    trySend(estado)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando estado", e)
-                    trySend(Result.failure(e))
+                    trySend(DispenserState())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Lectura de estado cancelada", error.toException())
-                trySend(Result.failure(error.toException()))
+                trySend(DispenserState())
             }
         }
 
@@ -66,34 +81,39 @@ class FirebaseRepository {
             reference.removeEventListener(listener)
             Log.d(TAG, "Listener de estado eliminado")
         }
+    }.catch { e ->
+        Log.e(TAG, "Error en observarEstado", e)
+        emit(DispenserState())
     }
 
     /**
      * Observa el control del dispensador en tiempo real
      */
-    fun observarControl(): Flow<Result<DispenserControl>> = callbackFlow {
-        val reference = database.getReference(PATH_CONTROL)
+    fun observarControl(): Flow<DispenserControl?> = callbackFlow {
+        if (database == null) {
+            Log.e(TAG, "Database no inicializado, retornando control por defecto")
+            trySend(DispenserControl())
+            close()
+            return@callbackFlow
+        }
+
+        val reference = database!!.getReference(PATH_CONTROL)
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
-                    val control = snapshot.getValue(DispenserControl::class.java)
-                    if (control != null) {
-                        Log.d(TAG, "Control actualizado: $control")
-                        trySend(Result.success(control))
-                    } else {
-                        Log.w(TAG, "Control es null, creando control por defecto")
-                        trySend(Result.success(DispenserControl()))
-                    }
+                    val control = snapshot.getValue(DispenserControl::class.java) ?: DispenserControl()
+                    Log.d(TAG, "Control actualizado: $control")
+                    trySend(control)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando control", e)
-                    trySend(Result.failure(e))
+                    trySend(DispenserControl())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Lectura de control cancelada", error.toException())
-                trySend(Result.failure(error.toException()))
+                trySend(DispenserControl())
             }
         }
 
@@ -101,36 +121,39 @@ class FirebaseRepository {
 
         awaitClose {
             reference.removeEventListener(listener)
-            Log.d(TAG, "Listener de control eliminado")
         }
+    }.catch { e ->
+        Log.e(TAG, "Error en observarControl", e)
+        emit(DispenserControl())
     }
 
     /**
      * Observa las notificaciones en tiempo real
      */
-    fun observarNotificaciones(): Flow<Result<DispenserNotification>> = callbackFlow {
-        val reference = database.getReference(PATH_NOTIFICACIONES)
+    fun observarNotificaciones(): Flow<DispenserNotification?> = callbackFlow {
+        if (database == null) {
+            trySend(DispenserNotification.crearVacia())
+            close()
+            return@callbackFlow
+        }
+
+        val reference = database!!.getReference(PATH_NOTIFICACIONES)
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
-                    val notificacion = snapshot.getValue(DispenserNotification::class.java)
-                    if (notificacion != null) {
-                        Log.d(TAG, "Notificación actualizada: $notificacion")
-                        trySend(Result.success(notificacion))
-                    } else {
-                        Log.w(TAG, "Notificación es null, creando notificación vacía")
-                        trySend(Result.success(DispenserNotification.vacia()))
-                    }
+                    val notif = snapshot.getValue(DispenserNotification::class.java)
+                        ?: DispenserNotification.crearVacia()
+                    trySend(notif)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error procesando notificación", e)
-                    trySend(Result.failure(e))
+                    Log.e(TAG, "Error procesando notificaciones", e)
+                    trySend(DispenserNotification.crearVacia())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Lectura de notificaciones cancelada", error.toException())
-                trySend(Result.failure(error.toException()))
+                trySend(DispenserNotification.crearVacia())
             }
         }
 
@@ -138,35 +161,43 @@ class FirebaseRepository {
 
         awaitClose {
             reference.removeEventListener(listener)
-            Log.d(TAG, "Listener de notificaciones eliminado")
         }
+    }.catch { e ->
+        Log.e(TAG, "Error en observarNotificaciones", e)
+        emit(DispenserNotification.crearVacia())
     }
 
     /**
-     * Observa los horarios programados en tiempo real
+     * Observa los horarios programados
      */
-    fun observarHorarios(): Flow<Result<List<DispenserSchedule>>> = callbackFlow {
-        val reference = database.getReference(PATH_HORARIOS)
+    fun observarHorarios(): Flow<List<DispenserSchedule>> = callbackFlow {
+        if (database == null) {
+            trySend(emptyList())
+            close()
+            return@callbackFlow
+        }
+
+        val reference = database!!.getReference(PATH_HORARIOS)
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
                     val horarios = mutableListOf<DispenserSchedule>()
-                    for (childSnapshot in snapshot.children) {
-                        val horario = childSnapshot.getValue(DispenserSchedule::class.java)
-                        horario?.let { horarios.add(it) }
+                    for (child in snapshot.children) {
+                        child.getValue(DispenserSchedule::class.java)?.let {
+                            horarios.add(it)
+                        }
                     }
-                    Log.d(TAG, "Horarios actualizados: ${horarios.size} horarios")
-                    trySend(Result.success(horarios))
+                    trySend(horarios)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando horarios", e)
-                    trySend(Result.failure(e))
+                    trySend(emptyList())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Lectura de horarios cancelada", error.toException())
-                trySend(Result.failure(error.toException()))
+                trySend(emptyList())
             }
         }
 
@@ -174,39 +205,45 @@ class FirebaseRepository {
 
         awaitClose {
             reference.removeEventListener(listener)
-            Log.d(TAG, "Listener de horarios eliminado")
         }
+    }.catch { e ->
+        Log.e(TAG, "Error en observarHorarios", e)
+        emit(emptyList())
     }
 
     /**
-     * Observa el historial de dispensaciones (limitado a los últimos N registros)
+     * Observa el historial
      */
-    fun observarHistorial(limit: Int = 50): Flow<Result<List<DispenserHistory>>> = callbackFlow {
-        val reference = database.getReference(PATH_HISTORIAL)
+    fun observarHistorial(): Flow<List<DispenserHistory>> = callbackFlow {
+        if (database == null) {
+            trySend(emptyList())
+            close()
+            return@callbackFlow
+        }
+
+        val reference = database!!.getReference(PATH_HISTORIAL)
             .orderByChild("timestamp")
-            .limitToLast(limit)
+            .limitToLast(50)
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
                     val historial = mutableListOf<DispenserHistory>()
-                    for (childSnapshot in snapshot.children) {
-                        val registro = childSnapshot.getValue(DispenserHistory::class.java)
-                        registro?.let { historial.add(it) }
+                    for (child in snapshot.children) {
+                        child.getValue(DispenserHistory::class.java)?.let {
+                            historial.add(it)
+                        }
                     }
-                    // Ordenar por timestamp descendente (más reciente primero)
-                    historial.sortByDescending { it.timestamp }
-                    Log.d(TAG, "Historial actualizado: ${historial.size} registros")
-                    trySend(Result.success(historial))
+                    trySend(historial.reversed())
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando historial", e)
-                    trySend(Result.failure(e))
+                    trySend(emptyList())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e(TAG, "Lectura de historial cancelada", error.toException())
-                trySend(Result.failure(error.toException()))
+                trySend(emptyList())
             }
         }
 
@@ -214,97 +251,73 @@ class FirebaseRepository {
 
         awaitClose {
             reference.removeEventListener(listener)
-            Log.d(TAG, "Listener de historial eliminado")
         }
+    }.catch { e ->
+        Log.e(TAG, "Error en observarHistorial", e)
+        emit(emptyList())
     }
 
     // ==================== OPERACIONES DE ESCRITURA ====================
 
     /**
-     * Actualiza el control del dispensador
+     * Dispensa agua manualmente
      */
-    suspend fun actualizarControl(control: DispenserControl): Result<Unit> {
+    suspend fun dispensarManual(cantidad: Int): Result<Unit> {
         return try {
-            val reference = database.getReference(PATH_CONTROL)
-            val controlActualizado = control.copy(
-                ultimaInstruccion = System.currentTimeMillis()
-            )
-            reference.setValue(controlActualizado).await()
-            Log.d(TAG, "Control actualizado exitosamente")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error actualizando control", e)
-            Result.failure(e)
-        }
-    }
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
 
-    /**
-     * Dispensa agua manualmente con la cantidad especificada
-     */
-    suspend fun dispensarManual(cantidad: Int, usuario: String = "Usuario"): Result<Unit> {
-        return try {
-            // Actualizar control para dispensar
             val control = DispenserControl(
                 motorEncendido = true,
                 cantidadDispensado = cantidad,
                 ultimaInstruccion = System.currentTimeMillis()
             )
-            database.getReference(PATH_CONTROL).setValue(control).await()
 
-            // Registrar en historial
-            val historyId = System.currentTimeMillis().toString()
-            val history = DispenserHistory(
-                id = historyId,
-                timestamp = System.currentTimeMillis(),
-                cantidad = cantidad,
-                tipo = DispenserHistory.TIPO_MANUAL,
-                usuario = usuario,
-                exitoso = true
-            )
-            database.getReference("$PATH_HISTORIAL/$historyId").setValue(history).await()
+            database!!.getReference(PATH_CONTROL).setValue(control).await()
 
-            Log.d(TAG, "Dispensado manual exitoso: $cantidad ml")
+            Log.d(TAG, "Dispensado manual: $cantidad ml")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error en dispensado manual", e)
+            Log.e(TAG, "Error en dispensarManual", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Detiene el motor del dispensador
+     * Detiene el motor
      */
     suspend fun detenerMotor(): Result<Unit> {
         return try {
-            val reference = database.getReference(PATH_CONTROL)
-            val control = DispenserControl(
-                motorEncendido = false,
-                ultimaInstruccion = System.currentTimeMillis()
-            )
-            reference.setValue(control).await()
-            Log.d(TAG, "Motor detenido exitosamente")
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
+
+            database!!.getReference(PATH_CONTROL).child("motorEncendido").setValue(false).await()
+
+            Log.d(TAG, "Motor detenido")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error deteniendo motor", e)
+            Log.e(TAG, "Error en detenerMotor", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Cambia el modo de operación (manual/automático)
+     * Cambia el modo de operación
      */
     suspend fun cambiarModo(automatico: Boolean): Result<Unit> {
         return try {
-            val reference = database.getReference(PATH_CONTROL)
-            val control = DispenserControl(
-                modoAutomatico = automatico,
-                ultimaInstruccion = System.currentTimeMillis()
-            )
-            reference.setValue(control).await()
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
+
+            database!!.getReference(PATH_CONTROL).child("modoAutomatico").setValue(automatico).await()
+
             Log.d(TAG, "Modo cambiado a: ${if (automatico) "Automático" else "Manual"}")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error cambiando modo", e)
+            Log.e(TAG, "Error en cambiarModo", e)
             Result.failure(e)
         }
     }
@@ -314,99 +327,100 @@ class FirebaseRepository {
      */
     suspend fun toggleProgramacion(activa: Boolean): Result<Unit> {
         return try {
-            val reference = database.getReference(PATH_CONTROL)
-            val control = DispenserControl(
-                programacionActiva = activa,
-                ultimaInstruccion = System.currentTimeMillis()
-            )
-            reference.setValue(control).await()
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
+
+            database!!.getReference(PATH_CONTROL).child("programacionActiva").setValue(activa).await()
+
             Log.d(TAG, "Programación ${if (activa) "activada" else "desactivada"}")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error cambiando programación", e)
+            Log.e(TAG, "Error en toggleProgramacion", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Agrega un nuevo horario programado
+     * Agrega un horario
      */
-    suspend fun agregarHorario(schedule: DispenserSchedule): Result<String> {
+    suspend fun agregarHorario(horario: DispenserSchedule): Result<Unit> {
         return try {
-            val id = database.getReference(PATH_HORARIOS).push().key
-                ?: throw Exception("No se pudo generar ID")
-            
-            val horarioConId = schedule.copy(
-                id = id,
-                fechaCreacion = System.currentTimeMillis()
-            )
-            
-            database.getReference("$PATH_HORARIOS/$id").setValue(horarioConId).await()
-            Log.d(TAG, "Horario agregado exitosamente: $id")
-            Result.success(id)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error agregando horario", e)
-            Result.failure(e)
-        }
-    }
-
-    /**
-     * Actualiza un horario existente
-     */
-    suspend fun actualizarHorario(schedule: DispenserSchedule): Result<Unit> {
-        return try {
-            if (schedule.id.isEmpty()) {
-                throw Exception("ID de horario no válido")
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
             }
-            database.getReference("$PATH_HORARIOS/${schedule.id}").setValue(schedule).await()
-            Log.d(TAG, "Horario actualizado exitosamente: ${schedule.id}")
+
+            database!!.getReference(PATH_HORARIOS).child(horario.id).setValue(horario).await()
+
+            Log.d(TAG, "Horario agregado: ${horario.hora}")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error actualizando horario", e)
+            Log.e(TAG, "Error en agregarHorario", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Elimina un horario programado
+     * Actualiza un horario
+     */
+    suspend fun actualizarHorario(horario: DispenserSchedule): Result<Unit> {
+        return try {
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
+
+            database!!.getReference(PATH_HORARIOS).child(horario.id).setValue(horario).await()
+
+            Log.d(TAG, "Horario actualizado: ${horario.hora}")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error en actualizarHorario", e)
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Elimina un horario
      */
     suspend fun eliminarHorario(id: String): Result<Unit> {
         return try {
-            database.getReference("$PATH_HORARIOS/$id").removeValue().await()
-            Log.d(TAG, "Horario eliminado exitosamente: $id")
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
+
+            database!!.getReference(PATH_HORARIOS).child(id).removeValue().await()
+
+            Log.d(TAG, "Horario eliminado: $id")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error eliminando horario", e)
+            Log.e(TAG, "Error en eliminarHorario", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Limpia todas las notificaciones
+     * Limpia las notificaciones
      */
     suspend fun limpiarNotificaciones(): Result<Unit> {
         return try {
-            val reference = database.getReference(PATH_NOTIFICACIONES)
-            reference.setValue(DispenserNotification.vacia()).await()
+            if (database == null) {
+                return Result.failure(Exception("Firebase no inicializado"))
+            }
+
+            database!!.getReference(PATH_NOTIFICACIONES).setValue(DispenserNotification.crearVacia()).await()
+
             Log.d(TAG, "Notificaciones limpiadas")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error limpiando notificaciones", e)
+            Log.e(TAG, "Error en limpiarNotificaciones", e)
             Result.failure(e)
         }
     }
 
     /**
-     * Limpia el historial completo
+     * Verifica si Firebase está inicializado
      */
-    suspend fun limpiarHistorial(): Result<Unit> {
-        return try {
-            database.getReference(PATH_HISTORIAL).removeValue().await()
-            Log.d(TAG, "Historial limpiado")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error limpiando historial", e)
-            Result.failure(e)
-        }
+    fun isInitialized(): Boolean {
+        return database != null
     }
 }

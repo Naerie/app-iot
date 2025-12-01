@@ -1,12 +1,7 @@
 package com.dispensador.app.data
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
 /**
- * Modelo unificado de notificaciones del dispensador
- * Gestiona alertas y avisos del sistema
+ * Modelo de datos para notificaciones del dispensador
  */
 data class DispenserNotification(
     val nivelBajo: Boolean = false,
@@ -14,27 +9,26 @@ data class DispenserNotification(
     val errorSistema: Boolean = false,
     val desconexion: Boolean = false,
     val mensaje: String = "",
-    val timestamp: Long = 0L
+    val timestamp: Long = 0
 ) {
-    // Constructor sin argumentos requerido por Firebase
-    constructor() : this(
-        nivelBajo = false,
-        contenidoVacio = false,
-        errorSistema = false,
-        desconexion = false,
-        mensaje = "",
-        timestamp = 0L
-    )
-
-    /**
-     * Verifica si hay alguna notificación activa
-     */
-    fun tieneNotificaciones(): Boolean {
-        return nivelBajo || contenidoVacio || errorSistema || desconexion
+    companion object {
+        /**
+         * Crea una notificación vacía
+         */
+        fun crearVacia(): DispenserNotification {
+            return DispenserNotification(
+                nivelBajo = false,
+                contenidoVacio = false,
+                errorSistema = false,
+                desconexion = false,
+                mensaje = "",
+                timestamp = 0
+            )
+        }
     }
 
     /**
-     * Obtiene el número total de notificaciones activas
+     * Cuenta el número de notificaciones activas
      */
     fun contarNotificaciones(): Int {
         var count = 0
@@ -46,92 +40,113 @@ data class DispenserNotification(
     }
 
     /**
-     * Obtiene la prioridad de la notificación (mayor número = mayor prioridad)
+     * Verifica si hay alguna notificación activa
      */
-    fun obtenerPrioridad(): Int {
-        return when {
-            contenidoVacio -> 4
-            errorSistema -> 3
-            desconexion -> 2
-            nivelBajo -> 1
-            else -> 0
-        }
-    }
-
-    /**
-     * Obtiene el título de la notificación más importante
-     */
-    fun obtenerTitulo(): String {
-        return when {
-            contenidoVacio -> "Contenedor Vacío"
-            errorSistema -> "Error del Sistema"
-            desconexion -> "Dispositivo Desconectado"
-            nivelBajo -> "Nivel Bajo de Agua"
-            else -> "Sin Notificaciones"
-        }
+    fun tieneNotificaciones(): Boolean {
+        return nivelBajo || contenidoVacio || errorSistema || desconexion
     }
 
     /**
      * Obtiene el mensaje de la notificación más importante
      */
-    fun obtenerMensaje(): String {
-        if (mensaje.isNotEmpty()) return mensaje
+    fun obtenerMensajePrincipal(): String {
+        return when {
+            contenidoVacio -> "Contenido vacío"
+            errorSistema -> "Error en el sistema"
+            desconexion -> "Dispositivo desconectado"
+            nivelBajo -> "Nivel bajo de agua"
+            mensaje.isNotEmpty() -> mensaje
+            else -> "Sin notificaciones"
+        }
+    }
+
+    /**
+     * Obtiene una lista de notificaciones activas para mostrar en la UI
+     */
+    fun obtenerListaNotificaciones(): List<NotificationItem> {
+        val lista = mutableListOf<NotificationItem>()
         
-        return when {
-            contenidoVacio -> "El contenedor de agua está vacío. Por favor, rellénelo."
-            errorSistema -> "Se ha detectado un error en el sistema. Revise el dispositivo."
-            desconexion -> "El dispositivo se ha desconectado. Verifique la conexión."
-            nivelBajo -> "El nivel de agua está bajo (menos del 20%)."
-            else -> "No hay notificaciones pendientes."
-        }
-    }
-
-    /**
-     * Obtiene el color del indicador según la prioridad
-     */
-    fun obtenerColor(): Long {
-        return when {
-            contenidoVacio || errorSistema -> 0xFFF44336 // Rojo
-            desconexion -> 0xFFFF9800 // Naranja
-            nivelBajo -> 0xFFFFEB3B // Amarillo
-            else -> 0xFF4CAF50 // Verde
-        }
-    }
-
-    /**
-     * Obtiene la fecha y hora formateadas
-     */
-    fun obtenerFechaHora(): String {
-        if (timestamp == 0L) return ""
-        val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-        return formato.format(Date(timestamp))
-    }
-
-    /**
-     * Obtiene lista de todas las notificaciones activas
-     */
-    fun obtenerListaNotificaciones(): List<String> {
-        val lista = mutableListOf<String>()
-        if (contenidoVacio) lista.add("Contenedor vacío")
-        if (errorSistema) lista.add("Error del sistema")
-        if (desconexion) lista.add("Dispositivo desconectado")
-        if (nivelBajo) lista.add("Nivel bajo de agua")
-        return lista
-    }
-
-    companion object {
-        /**
-         * Crea una notificación vacía (sin alertas)
-         */
-        fun vacia(): DispenserNotification {
-            return DispenserNotification(
-                nivelBajo = false,
-                contenidoVacio = false,
-                errorSistema = false,
-                desconexion = false,
-                mensaje = "",
-                timestamp = System.currentTimeMillis()
+        if (contenidoVacio) {
+            lista.add(
+                NotificationItem(
+                    id = "contenido_vacio",
+                    titulo = "Contenido Vacío",
+                    mensaje = "El dispensador está vacío. Por favor, recarga el contenido.",
+                    tipo = NotificationType.ERROR,
+                    timestamp = timestamp
+                )
             )
         }
+        
+        if (errorSistema) {
+            lista.add(
+                NotificationItem(
+                    id = "error_sistema",
+                    titulo = "Error del Sistema",
+                    mensaje = mensaje.ifEmpty { "Se ha detectado un error en el sistema." },
+                    tipo = NotificationType.ERROR,
+                    timestamp = timestamp
+                )
+            )
+        }
+        
+        if (desconexion) {
+            lista.add(
+                NotificationItem(
+                    id = "desconexion",
+                    titulo = "Dispositivo Desconectado",
+                    mensaje = "El dispensador ha perdido la conexión.",
+                    tipo = NotificationType.WARNING,
+                    timestamp = timestamp
+                )
+            )
+        }
+        
+        if (nivelBajo) {
+            lista.add(
+                NotificationItem(
+                    id = "nivel_bajo",
+                    titulo = "Nivel Bajo de Agua",
+                    mensaje = "El nivel de agua está por debajo del 20%.",
+                    tipo = NotificationType.INFO,
+                    timestamp = timestamp
+                )
+            )
+        }
+        
+        // Si no hay notificaciones específicas pero hay un mensaje
+        if (lista.isEmpty() && mensaje.isNotEmpty()) {
+            lista.add(
+                NotificationItem(
+                    id = "mensaje_general",
+                    titulo = "Notificación",
+                    mensaje = mensaje,
+                    tipo = NotificationType.INFO,
+                    timestamp = timestamp
+                )
+            )
+        }
+        
+        return lista
     }
+}
+
+/**
+ * Modelo para items individuales de notificación en la UI
+ */
+data class NotificationItem(
+    val id: String,
+    val titulo: String,
+    val mensaje: String,
+    val tipo: NotificationType,
+    val timestamp: Long
+)
+
+/**
+ * Tipos de notificación
+ */
+enum class NotificationType {
+    INFO,
+    WARNING,
+    ERROR
 }

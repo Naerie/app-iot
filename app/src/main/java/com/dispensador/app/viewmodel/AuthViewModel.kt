@@ -31,7 +31,7 @@ class AuthViewModel : ViewModel() {
      */
     private fun observeAuthState() {
         viewModelScope.launch {
-            authRepository.observarEstadoAuth().collect { user ->
+            authRepository.observeAuthState().collect { user ->
                 _currentUser.value = user
                 _authState.value = if (user != null) {
                     AuthState.Authenticated(user)
@@ -48,9 +48,9 @@ class AuthViewModel : ViewModel() {
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            
-            val result = authRepository.iniciarSesion(email, password)
-            
+
+            val result = authRepository.signIn(email, password)
+
             result.onSuccess { user ->
                 _authState.value = AuthState.Authenticated(user)
             }.onFailure { error ->
@@ -67,9 +67,9 @@ class AuthViewModel : ViewModel() {
     fun signUp(email: String, password: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            
-            val result = authRepository.registrarUsuario(email, password)
-            
+
+            val result = authRepository.signUp(email, password)
+
             result.onSuccess { user ->
                 _authState.value = AuthState.Authenticated(user)
             }.onFailure { error ->
@@ -84,7 +84,7 @@ class AuthViewModel : ViewModel() {
      * Cierra la sesión del usuario
      */
     fun signOut() {
-        authRepository.cerrarSesion()
+        authRepository.signOut()
         _authState.value = AuthState.Unauthenticated
     }
 
@@ -94,9 +94,9 @@ class AuthViewModel : ViewModel() {
     fun resetPassword(email: String) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            
-            val result = authRepository.recuperarPassword(email)
-            
+
+            val result = authRepository.sendPasswordResetEmail(email)
+
             result.onSuccess {
                 _authState.value = AuthState.PasswordResetSent
             }.onFailure { error ->
@@ -127,7 +127,7 @@ class AuthViewModel : ViewModel() {
      * Verifica si el usuario está autenticado
      */
     fun isAuthenticated(): Boolean {
-        return authRepository.estaAutenticado()
+        return authRepository.getCurrentUser() != null
     }
 }
 

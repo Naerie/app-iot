@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,13 +11,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.dispensador.app.data.NotificationItem
+import com.dispensador.app.data.NotificationType
 import com.dispensador.app.viewmodel.DispenserViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
+/**
+ * Pantalla de notificaciones del dispensador
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsScreen(
@@ -26,266 +31,75 @@ fun NotificationsScreen(
     onNavigateBack: () -> Unit
 ) {
     val notificaciones by dispenserViewModel.notificaciones.collectAsState()
-    val estado by dispenserViewModel.estado.collectAsState()
+    
+    // Obtener lista de notificaciones
+    val listaNotificaciones = remember(notificaciones) {
+        notificaciones?.obtenerListaNotificaciones() ?: emptyList()
+    }
 
-    val listaNotificaciones = notificaciones?.obtenerListaNotificaciones() ?: emptyList()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFFDFEFE),
-                        Color(0xFFF8FAFA)
-                    )
-                )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Notificaciones") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.Default.ArrowBack, "Volver")
+                    }
+                },
+                actions = {
+                    if (listaNotificaciones.isNotEmpty()) {
+                        IconButton(onClick = {
+                            dispenserViewModel.limpiarNotificaciones()
+                        }) {
+                            Icon(Icons.Default.Clear, "Limpiar notificaciones")
+                        }
+                    }
+                }
             )
-    ) {
-        Scaffold(
-            containerColor = Color.Transparent,
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Notificaciones",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Volver",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    actions = {
-                        if (listaNotificaciones.isNotEmpty()) {
-                            TextButton(
-                                onClick = {
-                                    dispenserViewModel.limpiarNotificaciones()
-                                }
-                            ) {
-                                Text(
-                                    text = "Limpiar",
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xFF00D2CF)
-                    )
-                )
-            }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp)
-            ) {
-                // Resumen de estado
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (listaNotificaciones.isEmpty())
-                            Color(0xFFE8F5E9)
-                        else
-                            Color(0xFFFFEBEE)
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 4.dp
-                    )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            if (listaNotificaciones.isEmpty()) {
+                // Estado vacío
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(56.dp)
-                                .background(
-                                    color = if (listaNotificaciones.isEmpty())
-                                        Color(0xFF4CAF50).copy(alpha = 0.2f)
-                                    else
-                                        Color(0xFFF44336).copy(alpha = 0.2f),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = if (listaNotificaciones.isEmpty())
-                                    Icons.Default.CheckCircle
-                                else
-                                    Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = if (listaNotificaciones.isEmpty())
-                                    Color(0xFF4CAF50)
-                                else
-                                    Color(0xFFF44336),
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Column {
-                            Text(
-                                text = if (listaNotificaciones.isEmpty())
-                                    "Todo en orden"
-                                else
-                                    "${listaNotificaciones.size} alerta(s) activa(s)",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF333333)
-                            )
-                            Text(
-                                text = if (listaNotificaciones.isEmpty())
-                                    "No hay notificaciones pendientes"
-                                else
-                                    "Requiere atención",
-                                fontSize = 14.sp,
-                                color = Color(0xFF666666)
-                            )
-                        }
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp),
+                        tint = MaterialTheme.colorScheme.outline
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "No hay notificaciones",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Todas las notificaciones aparecerán aquí",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.outline
+                    )
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+            } else {
                 // Lista de notificaciones
-                if (listaNotificaciones.isEmpty()) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(32.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.NotificationsOff,
-                                contentDescription = null,
-                                tint = Color(0xFFCCCCCC),
-                                modifier = Modifier.size(64.dp)
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(
-                                text = "Sin notificaciones",
-                                fontSize = 16.sp,
-                                color = Color(0xFF666666)
-                            )
-                            Text(
-                                text = "El sistema está funcionando correctamente",
-                                fontSize = 14.sp,
-                                color = Color(0xFF999999)
-                            )
-                        }
-                    }
-                } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        // Notificación de contenedor vacío
-                        if (notificaciones?.contenidoVacio == true) {
-                            item {
-                                NotificationCard(
-                                    title = "Contenedor Vacío",
-                                    message = "El contenedor de agua está vacío. Por favor, rellénelo.",
-                                    icon = Icons.Default.WaterDrop,
-                                    color = Color(0xFFF44336),
-                                    priority = "Alta"
-                                )
-                            }
-                        }
-
-                        // Notificación de error del sistema
-                        if (notificaciones?.errorSistema == true) {
-                            item {
-                                NotificationCard(
-                                    title = "Error del Sistema",
-                                    message = "Se ha detectado un error en el sistema. Revise el dispositivo.",
-                                    icon = Icons.Default.Error,
-                                    color = Color(0xFFF44336),
-                                    priority = "Alta"
-                                )
-                            }
-                        }
-
-                        // Notificación de desconexión
-                        if (notificaciones?.desconexion == true) {
-                            item {
-                                NotificationCard(
-                                    title = "Dispositivo Desconectado",
-                                    message = "El dispositivo se ha desconectado. Verifique la conexión.",
-                                    icon = Icons.Default.WifiOff,
-                                    color = Color(0xFFFF9800),
-                                    priority = "Media"
-                                )
-                            }
-                        }
-
-                        // Notificación de nivel bajo
-                        if (notificaciones?.nivelBajo == true) {
-                            item {
-                                NotificationCard(
-                                    title = "Nivel Bajo de Agua",
-                                    message = "El nivel de agua está bajo (${estado?.nivelAgua ?: 0}%). Considere rellenar pronto.",
-                                    icon = Icons.Default.WaterDrop,
-                                    color = Color(0xFFFFEB3B),
-                                    priority = "Baja"
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Información adicional
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE3F2FD)
-                    )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null,
-                            tint = Color(0xFF1976D2),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                text = "Información",
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1976D2),
-                                fontSize = 14.sp
-                            )
-                            Text(
-                                text = "Las notificaciones se actualizan en tiempo real",
-                                fontSize = 12.sp,
-                                color = Color(0xFF666666)
-                            )
-                        }
+                    items(listaNotificaciones) { notificacion ->
+                        NotificationCard(notificacion)
                     }
                 }
             }
@@ -293,82 +107,96 @@ fun NotificationsScreen(
     }
 }
 
+/**
+ * Card individual de notificación
+ */
 @Composable
-fun NotificationCard(
-    title: String,
-    message: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    color: Color,
-    priority: String
-) {
+fun NotificationCard(notificacion: NotificationItem) {
+    val (backgroundColor, iconColor, icon) = when (notificacion.tipo) {
+        NotificationType.ERROR -> Triple(
+            MaterialTheme.colorScheme.errorContainer,
+            MaterialTheme.colorScheme.error,
+            Icons.Default.Warning
+        )
+        NotificationType.WARNING -> Triple(
+            Color(0xFFFFF3CD),
+            Color(0xFFFF9800),
+            Icons.Default.Info
+        )
+        NotificationType.INFO -> Triple(
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.primary,
+            Icons.Default.Notifications
+        )
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
+            containerColor = backgroundColor
         )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.Top
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = color.copy(alpha = 0.2f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+            // Icono
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconColor,
+                modifier = Modifier.size(24.dp)
+            )
+
+            // Contenido
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = title,
-                    tint = color,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF333333)
-                    )
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = color.copy(alpha = 0.2f)
-                    ) {
-                        Text(
-                            text = priority,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = color,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = message,
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    lineHeight = 20.sp
+                    text = notificacion.titulo,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = iconColor
                 )
+                
+                Text(
+                    text = notificacion.mensaje,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                if (notificacion.timestamp > 0) {
+                    Text(
+                        text = formatearFecha(notificacion.timestamp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
+        }
+    }
+}
+
+/**
+ * Formatea la fecha de la notificación
+ */
+private fun formatearFecha(timestamp: Long): String {
+    if (timestamp == 0L) return ""
+    
+    val ahora = System.currentTimeMillis()
+    val diferencia = ahora - timestamp
+    
+    return when {
+        diferencia < 60_000 -> "Hace un momento"
+        diferencia < 3_600_000 -> "Hace ${diferencia / 60_000} minutos"
+        diferencia < 86_400_000 -> "Hace ${diferencia / 3_600_000} horas"
+        else -> {
+            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            sdf.format(Date(timestamp))
         }
     }
 }

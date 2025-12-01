@@ -2512,6 +2512,12 @@
     <string name="fallback_menu_item_copy_link">Copy link</string>
     <string name="fallback_menu_item_open_in_browser">Open in browser</string>
     <string name="fallback_menu_item_share_link">Share link</string>
+    <string name="firebase_database_url" translatable="false">https://dispensador-1c7a0-default-rtdb.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">545515079420</string>
+    <string name="google_api_key" translatable="false">AIzaSyDVURPSJxnFf79-C5mywMKW5sYfVFTUmRc</string>
+    <string name="google_app_id" translatable="false">1:545515079420:android:c8e6aba02e51fe5488f979</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDVURPSJxnFf79-C5mywMKW5sYfVFTUmRc</string>
+    <string name="google_storage_bucket" translatable="false">dispensador-1c7a0.firebasestorage.app</string>
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
     <string description="Content description for an icon that appears in the title area of a dialog" name="icon_content_description">Dialog Icon</string>
     <string name="in_progress">In progress</string>
@@ -2713,6 +2719,7 @@
     <string name="path_password_eye_mask_strike_through" translatable="false">M2,4.27 L19.73,22 L22.27,19.46 L4.54,1.73 L4.54,1 L23,1 L23,23 L1,23 L1,4.27 Z</string>
     <string name="path_password_eye_mask_visible" translatable="false">M2,4.27 L2,4.27 L4.54,1.73 L4.54,1.73 L4.54,1 L23,1 L23,23 L1,23 L1,4.27 Z</string>
     <string name="path_password_strike_through" translatable="false">M3.27,4.27 L19.74,20.74</string>
+    <string name="project_id" translatable="false">dispensador-1c7a0</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
     <string name="search_menu_title">Search</string>

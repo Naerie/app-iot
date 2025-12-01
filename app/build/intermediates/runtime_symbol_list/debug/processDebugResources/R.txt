@@ -4535,6 +4535,12 @@ int string fab_transformation_sheet_behavior 0x7f10004e
 int string fallback_menu_item_copy_link 0x7f10004f
 int string fallback_menu_item_open_in_browser 0x7f100050
 int string fallback_menu_item_share_link 0x7f100051
+int string firebase_database_url 0x7f10011e
+int string gcm_defaultSenderId 0x7f10011f
+int string google_api_key 0x7f100120
+int string google_app_id 0x7f100121
+int string google_crash_reporting_api_key 0x7f100122
+int string google_storage_bucket 0x7f100123
 int string hide_bottom_view_on_scroll_behavior 0x7f100052
 int string icon_content_description 0x7f100053
 int string in_progress 0x7f100054
@@ -4720,6 +4726,7 @@ int string path_password_eye 0x7f100107
 int string path_password_eye_mask_strike_through 0x7f100108
 int string path_password_eye_mask_visible 0x7f100109
 int string path_password_strike_through 0x7f10010a
+int string project_id 0x7f100124
 int string range_end 0x7f10010b
 int string range_start 0x7f10010c
 int string search_menu_title 0x7f10010d

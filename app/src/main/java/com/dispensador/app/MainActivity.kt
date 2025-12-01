@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,20 +25,27 @@ import com.dispensador.app.viewmodel.AuthViewModel
 import com.dispensador.app.viewmodel.DispenserViewModel
 
 /**
- * MainActivity unificada con soporte para notificaciones push
+ * MainActivity simplificada
+ * Firebase se inicializa en DispensadorApplication
  */
 class MainActivity : ComponentActivity() {
+
+    private val TAG = "MainActivity"
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // Permiso de notificaciones otorgado
+            Log.d(TAG, "Permiso de notificaciones otorgado")
+        } else {
+            Log.w(TAG, "Permiso de notificaciones denegado")
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d(TAG, "MainActivity onCreate")
 
         // Solicitar permiso de notificaciones para Android 13+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -66,6 +74,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DispensadorApp() {
     val navController = rememberNavController()
+
+    // ViewModels - Firebase ya está inicializado en Application
     val authViewModel: AuthViewModel = viewModel()
     val dispenserViewModel: DispenserViewModel = viewModel()
 

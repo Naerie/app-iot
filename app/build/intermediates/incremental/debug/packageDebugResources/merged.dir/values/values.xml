@@ -3,6 +3,13 @@
     <color name="notification_color">#000000</color>
     <string name="default_notification_channel_id">default_channel</string>
     <string name="dispensador">Dispensador</string>
+    <string name="firebase_database_url" translatable="false">https://dispensador-1c7a0-default-rtdb.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">545515079420</string>
+    <string name="google_api_key" translatable="false">AIzaSyDVURPSJxnFf79-C5mywMKW5sYfVFTUmRc</string>
+    <string name="google_app_id" translatable="false">1:545515079420:android:c8e6aba02e51fe5488f979</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDVURPSJxnFf79-C5mywMKW5sYfVFTUmRc</string>
+    <string name="google_storage_bucket" translatable="false">dispensador-1c7a0.firebasestorage.app</string>
+    <string name="project_id" translatable="false">dispensador-1c7a0</string>
     <style name="Theme.Dispensador" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         
     </style>

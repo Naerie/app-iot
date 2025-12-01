@@ -1,37 +1,27 @@
 {
   "project_info": {
-    "project_number": "470506152866",
-    "firebase_url": "https://dispensador-b07b1-default-rtdb.firebaseio.com",
-    "project_id": "dispensador-b07b1",
-    "storage_bucket": "dispensador-b07b1.firebasestorage.app"
+    "project_number": "545515079420",
+    "firebase_url": "https://dispensador-1c7a0-default-rtdb.firebaseio.com",
+    "project_id": "dispensador-1c7a0",
+    "storage_bucket": "dispensador-1c7a0.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:470506152866:android:5c3bb4541641dafc9bc8fb",
+        "mobilesdk_app_id": "1:545515079420:android:c8e6aba02e51fe5488f979",
         "android_client_info": {
           "package_name": "com.dispensador.app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "470506152866-v90ki7fda6trg7fablri4rre8dj2jhv1.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDlAysmFx5uSL7ivr1__SNNxxNs0Xp2Tzg"
+          "current_key": "AIzaSyDVURPSJxnFf79-C5mywMKW5sYfVFTUmRc"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "470506152866-v90ki7fda6trg7fablri4rre8dj2jhv1.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
