@@ -1,0 +1,69 @@
+com.dispensador.app-jetified-navigation-common-release-0 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/0659b5ced9956675bbb280d9f4774891/transformed/jetified-navigation-common-release/res
+com.dispensador.app-jetified-lifecycle-viewmodel-1 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/06bcd6bf6fc00685357013ab413c24fb/transformed/jetified-lifecycle-viewmodel/res
+com.dispensador.app-jetified-material3-2 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/0fd6072d20c11192b2bfbd43d5e46fc6/transformed/jetified-material3/res
+com.dispensador.app-jetified-savedstate-ktx-1.4.0-3 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/175cdfd77bb150e06d43d1027e92b923/transformed/jetified-savedstate-ktx-1.4.0/res
+com.dispensador.app-jetified-datastore-preferences-core-release-4 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/18c2fe16881d1c705219c4b8ead76c58/transformed/jetified-datastore-preferences-core-release/res
+com.dispensador.app-jetified-credentials-play-services-auth-1.2.0-rc01-5 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/1a1c4f66ddec83f5d7126c8b7075b8cc/transformed/jetified-credentials-play-services-auth-1.2.0-rc01/res
+com.dispensador.app-jetified-viewpager2-1.0.0-6 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/1f93e8027c0b086cbf3b1cfc447e450f/transformed/jetified-viewpager2-1.0.0/res
+com.dispensador.app-jetified-datastore-core-release-7 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/1fe5aa1abf5c5b331cbca03415d3e259/transformed/jetified-datastore-core-release/res
+com.dispensador.app-jetified-datastore-preferences-release-8 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/20a1d1d63d50a5bf19cdce5a77113dc7/transformed/jetified-datastore-preferences-release/res
+com.dispensador.app-jetified-graphics-path-1.0.1-9 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/2a2422b2d567c11a32cb3c78f3a2b8be/transformed/jetified-graphics-path-1.0.1/res
+com.dispensador.app-jetified-emoji2-1.4.0-10 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/2abce0b22ffb378acafcc508d21abf4a/transformed/jetified-emoji2-1.4.0/res
+com.dispensador.app-jetified-lifecycle-viewmodel-ktx-2.10.0-11 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/2b0f5ec2d42fa1881eb8db7fb9497ab7/transformed/jetified-lifecycle-viewmodel-ktx-2.10.0/res
+com.dispensador.app-lifecycle-livedata-2.10.0-12 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/2c65fa9d45a6238c6cc519abcfb60a16/transformed/lifecycle-livedata-2.10.0/res
+com.dispensador.app-jetified-ads-adservices-1.1.0-beta11-13 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/2d381c66fef77e177dd18190455d9e2d/transformed/jetified-ads-adservices-1.1.0-beta11/res
+com.dispensador.app-jetified-ui-graphics-release-14 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/2d774723020f5837908fae0055f58aba/transformed/jetified-ui-graphics-release/res
+com.dispensador.app-jetified-savedstate-15 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/39e9c0f7148cb47b003cff16fe926810/transformed/jetified-savedstate/res
+com.dispensador.app-jetified-ads-adservices-java-1.1.0-beta11-16 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/3a0c1c7d554faa904255c9402d03b4e1/transformed/jetified-ads-adservices-java-1.1.0-beta11/res
+com.dispensador.app-jetified-navigation-runtime-release-17 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/3a5115e9c8c73e1e30e0350b132d10c3/transformed/jetified-navigation-runtime-release/res
+com.dispensador.app-jetified-customview-poolingcontainer-1.0.0-18 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/3dc65d426e0cdeec3054235d7666de57/transformed/jetified-customview-poolingcontainer-1.0.0/res
+com.dispensador.app-jetified-datastore-release-19 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/46a5a5d28077bee3b4bf40c77274292d/transformed/jetified-datastore-release/res
+com.dispensador.app-jetified-navigation-compose-release-20 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/49586d3e2a3222dbab2f18a8cfb9c05a/transformed/jetified-navigation-compose-release/res
+com.dispensador.app-transition-1.5.0-21 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/52e4c2b256f4112c7cf9d939373e7433/transformed/transition-1.5.0/res
+com.dispensador.app-core-1.17.0-22 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/54009308c196ba479c81d343cb66c173/transformed/core-1.17.0/res
+com.dispensador.app-jetified-lifecycle-livedata-core-ktx-2.10.0-23 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/5514f27282726ed4b9a3f6992835b58c/transformed/jetified-lifecycle-livedata-core-ktx-2.10.0/res
+com.dispensador.app-jetified-core-common-2.0.3-24 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/5768969e4bc84b939041300ddd108650/transformed/jetified-core-common-2.0.3/res
+com.dispensador.app-jetified-profileinstaller-1.4.0-25 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/5a00a6c4a75c98b1e46bf091460fa522/transformed/jetified-profileinstaller-1.4.0/res
+com.dispensador.app-jetified-material-icons-core-release-26 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/5b362de4ebf77dbfe05dc70c576c1275/transformed/jetified-material-icons-core-release/res
+com.dispensador.app-jetified-tracing-1.2.0-27 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/63f630531efd10d4baba6cec91c4830c/transformed/jetified-tracing-1.2.0/res
+com.dispensador.app-appcompat-1.7.0-28 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/69fb1e957f81ab70d4a5dabb90e1dccf/transformed/appcompat-1.7.0/res
+com.dispensador.app-lifecycle-livedata-core-2.10.0-29 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/6d4f010fbda03dcaaf4b0e822487c2db/transformed/lifecycle-livedata-core-2.10.0/res
+com.dispensador.app-jetified-graphics-shapes-release-30 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/7083c55c75dd957ef28c8acb7362fbd9/transformed/jetified-graphics-shapes-release/res
+com.dispensador.app-jetified-lifecycle-process-2.10.0-31 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/7152c3e4ee65aae73dc4c9af9fa7e5f2/transformed/jetified-lifecycle-process-2.10.0/res
+com.dispensador.app-core-runtime-2.2.0-32 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/72eca5016e844673930dc05c77bd0a01/transformed/core-runtime-2.2.0/res
+com.dispensador.app-jetified-play-services-basement-18.5.0-33 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/75045268ad0e7edf59302213b4db7615/transformed/jetified-play-services-basement-18.5.0/res
+com.dispensador.app-jetified-appcompat-resources-1.7.0-34 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/8292b94754c89f74ea2dc5a4e04a364d/transformed/jetified-appcompat-resources-1.7.0/res
+com.dispensador.app-jetified-core-viewtree-1.0.0-35 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/8a1500b37294dec86de907b942dc3b2e/transformed/jetified-core-viewtree-1.0.0/res
+com.dispensador.app-jetified-core-ktx-1.17.0-36 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/8e642b634ba862050ba072b6d60b4e4b/transformed/jetified-core-ktx-1.17.0/res
+com.dispensador.app-jetified-foundation-release-37 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/912145d08bc44e8fe83f73a7a9dced22/transformed/jetified-foundation-release/res
+com.dispensador.app-jetified-emoji2-views-helper-1.4.0-38 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/932763d106f42ce8ca34c2a836edbd60/transformed/jetified-emoji2-views-helper-1.4.0/res
+com.dispensador.app-jetified-credentials-1.2.0-rc01-39 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/95b2dbdb21fd71ab99733f80e38a8845/transformed/jetified-credentials-1.2.0-rc01/res
+com.dispensador.app-coordinatorlayout-1.1.0-40 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/982e88aa8d33b8ac92091af5c2270525/transformed/coordinatorlayout-1.1.0/res
+com.dispensador.app-jetified-annotation-experimental-1.4.1-41 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/9a02183f883294fced040e6365cd5e2d/transformed/jetified-annotation-experimental-1.4.1/res
+com.dispensador.app-drawerlayout-1.1.1-42 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/9b304a757f8c492aef01de24e63e424f/transformed/drawerlayout-1.1.1/res
+com.dispensador.app-recyclerview-1.2.1-43 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/a6e804f995c6f151a44bb4d1d754f4d9/transformed/recyclerview-1.2.1/res
+com.dispensador.app-browser-1.4.0-44 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/a8bab194045581ff957c25f9951655b2/transformed/browser-1.4.0/res
+com.dispensador.app-fragment-1.5.4-45 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/af92ce3b85fa65620768a40ab020e903/transformed/fragment-1.5.4/res
+com.dispensador.app-jetified-activity-compose-1.12.0-46 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/b1c1830cd23ce7eb3a7662d27e70f32a/transformed/jetified-activity-compose-1.12.0/res
+com.dispensador.app-material-1.13.0-47 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/b49e2c5c72e9a6abde7d3075884e58d5/transformed/material-1.13.0/res
+com.dispensador.app-jetified-ui-release-48 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/bc85a1af921aa2077ab9de2319bb06a0/transformed/jetified-ui-release/res
+com.dispensador.app-cardview-1.0.0-49 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/c5c3ad1e3244465b223456f7ab7bc9a9/transformed/cardview-1.0.0/res
+com.dispensador.app-jetified-activity-1.12.0-50 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/cc3937648fcd4f2b598c4b22e575126a/transformed/jetified-activity-1.12.0/res
+com.dispensador.app-jetified-activity-ktx-1.12.0-51 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/ce8e528a93b7078f48ec88d4e5b7ccb8/transformed/jetified-activity-ktx-1.12.0/res
+com.dispensador.app-jetified-firebase-common-22.0.1-52 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/d39e911c44a90672c6cfdb9192af3df1/transformed/jetified-firebase-common-22.0.1/res
+com.dispensador.app-jetified-startup-runtime-1.1.1-53 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/e4801e591638a69928fe22008b96ad75/transformed/jetified-startup-runtime-1.1.1/res
+com.dispensador.app-jetified-lifecycle-runtime-54 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/e601190efdfec47a49d66436610787b5/transformed/jetified-lifecycle-runtime/res
+com.dispensador.app-jetified-play-services-base-18.5.0-55 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/ea9c08f1548c992edbf59c27139c2e4a/transformed/jetified-play-services-base-18.5.0/res
+com.dispensador.app-jetified-play-services-auth-20.7.0-56 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/eebf3c8dc4f614df2d0efc273ee87a57/transformed/jetified-play-services-auth-20.7.0/res
+com.dispensador.app-dynamicanimation-1.1.0-57 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/ef0e211364b260504ce9536040573f39/transformed/dynamicanimation-1.1.0/res
+com.dispensador.app-jetified-navigationevent-58 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/f1f0b85ebe2d7191c6540bac7a0b7cf3/transformed/jetified-navigationevent/res
+com.dispensador.app-jetified-material-icons-extended-release-59 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/f26778d411484a8c8cb85c277aa72c97/transformed/jetified-material-icons-extended-release/res
+com.dispensador.app-constraintlayout-2.1.0-60 /Users/navi/.gradle/caches/9.0-milestone-1/transforms/ff786481b9ff9194019fafbe6755892f/transformed/constraintlayout-2.1.0/res
+com.dispensador.app-pngs-61 /Users/navi/Downloads/dispensador_unificado 2/app/build/generated/res/pngs/debug
+com.dispensador.app-res-62 /Users/navi/Downloads/dispensador_unificado 2/app/build/generated/res/processDebugGoogleServices
+com.dispensador.app-resValues-63 /Users/navi/Downloads/dispensador_unificado 2/app/build/generated/res/resValues/debug
+com.dispensador.app-packageDebugResources-64 /Users/navi/Downloads/dispensador_unificado 2/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.dispensador.app-packageDebugResources-65 /Users/navi/Downloads/dispensador_unificado 2/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.dispensador.app-merged_res-66 /Users/navi/Downloads/dispensador_unificado 2/app/build/intermediates/merged_res/debug
+com.dispensador.app-debug-67 /Users/navi/Downloads/dispensador_unificado 2/app/src/debug/res
+com.dispensador.app-main-68 /Users/navi/Downloads/dispensador_unificado 2/app/src/main/res

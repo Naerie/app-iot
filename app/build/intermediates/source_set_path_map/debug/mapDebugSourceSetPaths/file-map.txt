@@ -1,0 +1,68 @@
+com.dispensador.app-jetified-ads-adservices-java-1.1.0-beta11-0 /Users/navi/.gradle/caches/8.11.1/transforms/012e4b431430deed1a4b83242aa4b316/transformed/jetified-ads-adservices-java-1.1.0-beta11/res
+com.dispensador.app-jetified-tracing-1.2.0-1 /Users/navi/.gradle/caches/8.11.1/transforms/0138cab46b932bc21eda65cc08c583fc/transformed/jetified-tracing-1.2.0/res
+com.dispensador.app-dynamicanimation-1.1.0-2 /Users/navi/.gradle/caches/8.11.1/transforms/0d3ef73dc0182107a82d6176312708ee/transformed/dynamicanimation-1.1.0/res
+com.dispensador.app-lifecycle-livedata-core-2.10.0-3 /Users/navi/.gradle/caches/8.11.1/transforms/173596e556b181c9734906f1b8f22dcc/transformed/lifecycle-livedata-core-2.10.0/res
+com.dispensador.app-jetified-emoji2-1.4.0-4 /Users/navi/.gradle/caches/8.11.1/transforms/1a63c6ad3037861900d1e8874c36a52b/transformed/jetified-emoji2-1.4.0/res
+com.dispensador.app-cardview-1.0.0-5 /Users/navi/.gradle/caches/8.11.1/transforms/1d560d2030bb8c596eb3223e67c9741d/transformed/cardview-1.0.0/res
+com.dispensador.app-jetified-play-services-basement-18.5.0-6 /Users/navi/.gradle/caches/8.11.1/transforms/1f6fc9606446c032a3fa461cc4ffd32d/transformed/jetified-play-services-basement-18.5.0/res
+com.dispensador.app-jetified-customview-poolingcontainer-1.0.0-7 /Users/navi/.gradle/caches/8.11.1/transforms/206ca1af59ac6ad63994699022b68187/transformed/jetified-customview-poolingcontainer-1.0.0/res
+com.dispensador.app-jetified-savedstate-ktx-1.4.0-8 /Users/navi/.gradle/caches/8.11.1/transforms/287b0b04dd4af637d100fe7097876638/transformed/jetified-savedstate-ktx-1.4.0/res
+com.dispensador.app-jetified-core-viewtree-1.0.0-9 /Users/navi/.gradle/caches/8.11.1/transforms/2f772951cca9ba1f01a181cf85833ddc/transformed/jetified-core-viewtree-1.0.0/res
+com.dispensador.app-jetified-emoji2-views-helper-1.4.0-10 /Users/navi/.gradle/caches/8.11.1/transforms/381efca83e5bfd8eaaa9b72fadb7b57e/transformed/jetified-emoji2-views-helper-1.4.0/res
+com.dispensador.app-jetified-viewpager2-1.0.0-11 /Users/navi/.gradle/caches/8.11.1/transforms/3908d12fbdc913ae501f6bc663e1a525/transformed/jetified-viewpager2-1.0.0/res
+com.dispensador.app-jetified-core-ktx-1.17.0-12 /Users/navi/.gradle/caches/8.11.1/transforms/3a2e27c2a8909e9226e84dfa9da71112/transformed/jetified-core-ktx-1.17.0/res
+com.dispensador.app-jetified-navigation-runtime-release-13 /Users/navi/.gradle/caches/8.11.1/transforms/3d90d04e025ebb6eb602b493f4123236/transformed/jetified-navigation-runtime-release/res
+com.dispensador.app-jetified-activity-compose-1.12.0-14 /Users/navi/.gradle/caches/8.11.1/transforms/4c5ee3688146c7f507a5a0905e0dd401/transformed/jetified-activity-compose-1.12.0/res
+com.dispensador.app-jetified-lifecycle-runtime-15 /Users/navi/.gradle/caches/8.11.1/transforms/4f4031900693861cb110c36fe6e081ae/transformed/jetified-lifecycle-runtime/res
+com.dispensador.app-jetified-credentials-1.2.0-rc01-16 /Users/navi/.gradle/caches/8.11.1/transforms/52d1a6d2aa19fd7d5f411663b5ea0b84/transformed/jetified-credentials-1.2.0-rc01/res
+com.dispensador.app-jetified-activity-ktx-1.12.0-17 /Users/navi/.gradle/caches/8.11.1/transforms/54b8dce521509fea2092f9634bf3025d/transformed/jetified-activity-ktx-1.12.0/res
+com.dispensador.app-jetified-material3-18 /Users/navi/.gradle/caches/8.11.1/transforms/5b114824bf1a0fbb6195297326287945/transformed/jetified-material3/res
+com.dispensador.app-recyclerview-1.2.1-19 /Users/navi/.gradle/caches/8.11.1/transforms/5f4cffb84ef3b043fe4dd259ffea7639/transformed/recyclerview-1.2.1/res
+com.dispensador.app-jetified-lifecycle-viewmodel-ktx-2.10.0-20 /Users/navi/.gradle/caches/8.11.1/transforms/62567ae0c665848bb9fbccb8afbbe61a/transformed/jetified-lifecycle-viewmodel-ktx-2.10.0/res
+com.dispensador.app-lifecycle-livedata-2.10.0-21 /Users/navi/.gradle/caches/8.11.1/transforms/62a9763e0493ea04aecedd689a492945/transformed/lifecycle-livedata-2.10.0/res
+com.dispensador.app-core-runtime-2.2.0-22 /Users/navi/.gradle/caches/8.11.1/transforms/6658cbb34fdae4053d13f1b7b675ac5f/transformed/core-runtime-2.2.0/res
+com.dispensador.app-jetified-ads-adservices-1.1.0-beta11-23 /Users/navi/.gradle/caches/8.11.1/transforms/670e0f98850f3df98094e6d8aee9c39c/transformed/jetified-ads-adservices-1.1.0-beta11/res
+com.dispensador.app-jetified-ui-release-24 /Users/navi/.gradle/caches/8.11.1/transforms/6964be2ec27ae5db086f701d63e38f4d/transformed/jetified-ui-release/res
+com.dispensador.app-jetified-navigationevent-25 /Users/navi/.gradle/caches/8.11.1/transforms/69b692256a1a8be61a1872ba9def6fdf/transformed/jetified-navigationevent/res
+com.dispensador.app-fragment-1.5.4-26 /Users/navi/.gradle/caches/8.11.1/transforms/6bc06081eb98b6016d9a846fabb8fc58/transformed/fragment-1.5.4/res
+com.dispensador.app-jetified-datastore-release-27 /Users/navi/.gradle/caches/8.11.1/transforms/6f37ffba7b97a326d04ee0a94a64fa28/transformed/jetified-datastore-release/res
+com.dispensador.app-constraintlayout-2.1.0-28 /Users/navi/.gradle/caches/8.11.1/transforms/70f26ffed57f0947b00da521486d7c7b/transformed/constraintlayout-2.1.0/res
+com.dispensador.app-jetified-play-services-auth-20.7.0-29 /Users/navi/.gradle/caches/8.11.1/transforms/73c0ed5de6e4a2f98f4d1cc6c644ff7f/transformed/jetified-play-services-auth-20.7.0/res
+com.dispensador.app-jetified-material-icons-core-release-30 /Users/navi/.gradle/caches/8.11.1/transforms/75c38390e89e3234f892bb32adbb419f/transformed/jetified-material-icons-core-release/res
+com.dispensador.app-core-1.17.0-31 /Users/navi/.gradle/caches/8.11.1/transforms/776a22c957b4aaf382178c3fbbfe35aa/transformed/core-1.17.0/res
+com.dispensador.app-coordinatorlayout-1.1.0-32 /Users/navi/.gradle/caches/8.11.1/transforms/82ad67606f0d7853f77b6423f47d8720/transformed/coordinatorlayout-1.1.0/res
+com.dispensador.app-jetified-annotation-experimental-1.4.1-33 /Users/navi/.gradle/caches/8.11.1/transforms/82c1403313713b488f0248c585929180/transformed/jetified-annotation-experimental-1.4.1/res
+com.dispensador.app-material-1.13.0-34 /Users/navi/.gradle/caches/8.11.1/transforms/8784f56800fafbb8896beb7e5909df9f/transformed/material-1.13.0/res
+com.dispensador.app-jetified-navigation-common-release-35 /Users/navi/.gradle/caches/8.11.1/transforms/8a2b15704e56b367adb7d9efaf7bb5e1/transformed/jetified-navigation-common-release/res
+com.dispensador.app-drawerlayout-1.1.1-36 /Users/navi/.gradle/caches/8.11.1/transforms/93be38018052e4b28fe4db8efd41fbd1/transformed/drawerlayout-1.1.1/res
+com.dispensador.app-jetified-play-services-base-18.5.0-37 /Users/navi/.gradle/caches/8.11.1/transforms/948286624aa13c191fabef2c97cc2473/transformed/jetified-play-services-base-18.5.0/res
+com.dispensador.app-jetified-navigation-compose-release-38 /Users/navi/.gradle/caches/8.11.1/transforms/94973cfe2afcd172b1df44680c23ef2b/transformed/jetified-navigation-compose-release/res
+com.dispensador.app-jetified-activity-1.12.0-39 /Users/navi/.gradle/caches/8.11.1/transforms/a888d70fe6309ff0054e5b1dbdfdcf72/transformed/jetified-activity-1.12.0/res
+com.dispensador.app-jetified-material-icons-extended-release-40 /Users/navi/.gradle/caches/8.11.1/transforms/ab5caf11c351377ebab98c33a8eeeb4a/transformed/jetified-material-icons-extended-release/res
+com.dispensador.app-jetified-lifecycle-process-2.10.0-41 /Users/navi/.gradle/caches/8.11.1/transforms/acf2378cd41c0b9bee0bbf44775d8b52/transformed/jetified-lifecycle-process-2.10.0/res
+com.dispensador.app-transition-1.5.0-42 /Users/navi/.gradle/caches/8.11.1/transforms/aff3bb32261f47571e080df8fd2d3c3a/transformed/transition-1.5.0/res
+com.dispensador.app-jetified-datastore-preferences-core-release-43 /Users/navi/.gradle/caches/8.11.1/transforms/b51b00472c333661467134c94fb9eccd/transformed/jetified-datastore-preferences-core-release/res
+com.dispensador.app-jetified-lifecycle-livedata-core-ktx-2.10.0-44 /Users/navi/.gradle/caches/8.11.1/transforms/b71a45888c95ae03c09d97ac8cfde87a/transformed/jetified-lifecycle-livedata-core-ktx-2.10.0/res
+com.dispensador.app-jetified-profileinstaller-1.4.0-45 /Users/navi/.gradle/caches/8.11.1/transforms/b791d71b05906d97a9952a0883aeb97c/transformed/jetified-profileinstaller-1.4.0/res
+com.dispensador.app-jetified-ui-graphics-release-46 /Users/navi/.gradle/caches/8.11.1/transforms/b9d5f7d9dcaad27dc236bfcb117c630c/transformed/jetified-ui-graphics-release/res
+com.dispensador.app-jetified-graphics-shapes-release-47 /Users/navi/.gradle/caches/8.11.1/transforms/bc7ba5996f68a5631324c6b2150de632/transformed/jetified-graphics-shapes-release/res
+com.dispensador.app-jetified-savedstate-48 /Users/navi/.gradle/caches/8.11.1/transforms/c97fbe7cd1ef4b6ee250b3ceb144c586/transformed/jetified-savedstate/res
+com.dispensador.app-appcompat-1.7.0-49 /Users/navi/.gradle/caches/8.11.1/transforms/d3ad8a377986dae4552fc7538e0d071d/transformed/appcompat-1.7.0/res
+com.dispensador.app-jetified-firebase-common-22.0.1-50 /Users/navi/.gradle/caches/8.11.1/transforms/d8eae4ecad1ee93ecf503d63e773c5d8/transformed/jetified-firebase-common-22.0.1/res
+com.dispensador.app-browser-1.4.0-51 /Users/navi/.gradle/caches/8.11.1/transforms/db59b1a307e12b3fa9c102984507939a/transformed/browser-1.4.0/res
+com.dispensador.app-jetified-lifecycle-viewmodel-52 /Users/navi/.gradle/caches/8.11.1/transforms/dc075b3f9a6bf25a0e8b6199b770e8de/transformed/jetified-lifecycle-viewmodel/res
+com.dispensador.app-jetified-datastore-core-release-53 /Users/navi/.gradle/caches/8.11.1/transforms/de0a411fc9f0315a32c7385f8c66a78a/transformed/jetified-datastore-core-release/res
+com.dispensador.app-jetified-datastore-preferences-release-54 /Users/navi/.gradle/caches/8.11.1/transforms/e02134be4232599823a93b27531ffe48/transformed/jetified-datastore-preferences-release/res
+com.dispensador.app-jetified-core-common-2.0.3-55 /Users/navi/.gradle/caches/8.11.1/transforms/e10f4d7f5afa41c81bb6345bc7525540/transformed/jetified-core-common-2.0.3/res
+com.dispensador.app-jetified-foundation-release-56 /Users/navi/.gradle/caches/8.11.1/transforms/e1e70b2029614fb536ef96dae979d4a6/transformed/jetified-foundation-release/res
+com.dispensador.app-jetified-startup-runtime-1.1.1-57 /Users/navi/.gradle/caches/8.11.1/transforms/ead92f30863c2f082f8dc79a820aa3d3/transformed/jetified-startup-runtime-1.1.1/res
+com.dispensador.app-jetified-graphics-path-1.0.1-58 /Users/navi/.gradle/caches/8.11.1/transforms/f4382bac9bae8103873851ce1a8d0fd9/transformed/jetified-graphics-path-1.0.1/res
+com.dispensador.app-jetified-appcompat-resources-1.7.0-59 /Users/navi/.gradle/caches/8.11.1/transforms/f8793a86b107caef97aa79d4a460cea4/transformed/jetified-appcompat-resources-1.7.0/res
+com.dispensador.app-jetified-credentials-play-services-auth-1.2.0-rc01-60 /Users/navi/.gradle/caches/8.11.1/transforms/ff3e60ec4692f2a189d8409452ac3e44/transformed/jetified-credentials-play-services-auth-1.2.0-rc01/res
+com.dispensador.app-pngs-61 /Users/navi/Downloads/dispensador_unificado 2/app/build/generated/res/pngs/debug
+com.dispensador.app-resValues-62 /Users/navi/Downloads/dispensador_unificado 2/app/build/generated/res/resValues/debug
+com.dispensador.app-packageDebugResources-63 /Users/navi/Downloads/dispensador_unificado 2/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.dispensador.app-packageDebugResources-64 /Users/navi/Downloads/dispensador_unificado 2/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.dispensador.app-debug-65 /Users/navi/Downloads/dispensador_unificado 2/app/build/intermediates/merged_res/debug/mergeDebugResources
+com.dispensador.app-debug-66 /Users/navi/Downloads/dispensador_unificado 2/app/src/debug/res
+com.dispensador.app-main-67 /Users/navi/Downloads/dispensador_unificado 2/app/src/main/res

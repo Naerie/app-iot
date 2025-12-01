@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notification_color">#000000</color>
+    <string name="default_notification_channel_id">default_channel</string>
+    <string name="dispensador">Dispensador</string>
+    <style name="Theme.Dispensador" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+    </style>
+</resources>

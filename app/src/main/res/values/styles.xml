@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="Theme.Dispensador" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- puedes personalizar colores luego -->
+    </style>
+
+</resources>
