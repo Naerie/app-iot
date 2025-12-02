@@ -1,19 +1,24 @@
 #include <ESP8266WiFi.h>
-#include <Firebase_ESP_Client.h>
+#include <FirebaseESP8266.h>
 #include "HX711.h"
-#include <ArduinoJson.h> // Necesario para parsear los horarios de Firebase
+#include <ArduinoJson.h>
+
 
 // ==================================================================================
 //  CONFIGURACIÓN DEL PROYECTO (¡DEBES REEMPLAZAR ESTOS VALORES!)
 // ==================================================================================
 
 // Credenciales WiFi
-const char* WIFI_SSID = "TU_WIFI_SSID";
-const char* WIFI_PASSWORD = "TU_WIFI_PASSWORD";
+const char* WIFI_SSID = "Katja";
+const char* WIFI_PASSWORD = "Tomate124";
 
-// Credenciales Firebase (Realtime Database)
-#define FIREBASE_HOST "TU_FIREBASE_PROJECT_ID.firebaseio.com" // Ejemplo: "dispensador-iot-default-rtdb.firebaseio.com"
-#define FIREBASE_AUTH "TU_FIREBASE_DATABASE_SECRET" // O el token de acceso de la cuenta de servicio
+// Configuración Firebase https://testdia4-baa4c-default-rtdb.firebaseio.com/
+const char* firebase_host = "dispensador-b07b1-default-rtdb.firebaseio.com";
+const char* firebase_auth = ""; // Vacío para reglas públicas, o tu auth key
+
+// URLs completas para Firebase REST API
+String sensor_url = "https://" + String(firebase_host) + "/sensor_data.json";
+String actuator_url = "https://" + String(firebase_host) + "/actuator_control.json";
 
 // ==================================================================================
 //  DEFINICIONES DE PINES Y SENSORES
@@ -147,8 +152,18 @@ void setupWiFi() {
 void setupFirebase() {
   Serial.println("Configurando Firebase...");
   
-  config.host = FIREBASE_HOST;
-  config.signer.tokens.databaseSecret = FIREBASE_AUTH;
+config.database_url = "https://dispensador-b07b1-default-rtdb.firebaseio.com";
+
+auth.service_account.email = "firebase-adminsdk-fbsvc@dispensador-b07b1.iam.gserviceaccount.com";
+auth.service_account.project_id = "dispensador-b07b1";
+auth.service_account.private_key =
+  "-----BEGIN PRIVATE KEY-----\n"
+  "AQUÍ_TU_LLAVE_PRIVADA_REGENERADA\n"
+  "-----END PRIVATE KEY-----\n";
+
+Firebase.begin(&config, &auth);
+Firebase.reconnectWiFi(true);
+
 
   // Asignar callbacks de stream para leer el control y los horarios
   Firebase.set
