@@ -437,9 +437,16 @@ class FirebaseRepository {
                 return Result.failure(Exception("Firebase no inicializado"))
             }
 
-            database!!.getReference(PATH_HORARIOS).child(horario.id).setValue(horario).await()
+            // Generar un ID único si el horario es nuevo (id vacío)
+            val ref = database!!.getReference(PATH_HORARIOS)
+            val newId = if (horario.id.isEmpty()) ref.push().key!! else horario.id
+            
+            // Crear una copia del horario con el ID generado
+            val horarioConId = horario.copy(id = newId, fechaCreacion = System.currentTimeMillis())
 
-            Log.d(TAG, "Horario agregado: ${horario.hora}")
+            ref.child(newId).setValue(horarioConId).await()
+
+            Log.d(TAG, "Horario agregado: ${horarioConId.hora} con ID: $newId")
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error en agregarHorario", e)
