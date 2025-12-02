@@ -16,9 +16,9 @@ const char* password = "Tomate124";
 const char* firebase_host = "https://dispensador-1c7a0-default-rtdb.firebaseio.com";
 
 // Rutas Firebase
-String estado_url      = String(firebase_host) + "/dispensador/estado.json";
-String control_url     = String(firebase_host) + "/dispensador/control.json";
-String horarios_url    = String(firebase_host) + "/dispensador/horarios.json";
+String estado_url      = String(firebase_host) + "/dispensador/estado.json?auth=WTTgyTKzVWwcLxaMvmdBWMslbNwVGNYmHPMm8eUj";
+String control_url     = String(firebase_host) + "/dispensador/control.json?auth=WTTgyTKzVWwcLxaMvmdBWMslbNwVGNYmHPMm8eUj";
+String horarios_url    = String(firebase_host) + "/dispensador/horarios.json?auth=WTTgyTKzVWwcLxaMvmdBWMslbNwVGNYmHPMm8eUj";
 
 // -------------------------------------------------------------
 // HARDWARE
