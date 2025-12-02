@@ -119,9 +119,9 @@ fun ScheduleScreen(
                                 color = Color(0xFF333333)
                             )
                             Text(
-                                text = if (control?.programacionActiva == true) 
-                                    "Horarios activos" 
-                                else 
+                                text = if (control?.programacionActiva == true)
+                                    "Horarios activos"
+                                else
                                     "Horarios desactivados",
                                 fontSize = 12.sp,
                                 color = Color(0xFF666666)
@@ -310,7 +310,7 @@ fun AddScheduleDialog(
     var cantidad by remember { mutableStateOf("250") }
     var diasSeleccionados by remember { mutableStateOf(setOf<Int>()) }
     var showTimePicker by remember { mutableStateOf(false) }
-    
+
     // Estado del TimePicker
     val timePickerState = rememberTimePickerState(
         initialHour = 8,
@@ -450,12 +450,12 @@ fun EditScheduleDialog(
     var cantidad by remember { mutableStateOf(schedule.cantidad.toString()) }
     var diasSeleccionados by remember { mutableStateOf(schedule.dias.toSet()) }
     var showTimePicker by remember { mutableStateOf(false) }
-    
+
     // Parsear hora inicial
     val horaParts = schedule.hora.split(":")
     val horaInicial = horaParts.getOrNull(0)?.toIntOrNull() ?: 8
     val minutoInicial = horaParts.getOrNull(1)?.toIntOrNull() ?: 0
-    
+
     val timePickerState = rememberTimePickerState(
         initialHour = horaInicial,
         initialMinute = minutoInicial,

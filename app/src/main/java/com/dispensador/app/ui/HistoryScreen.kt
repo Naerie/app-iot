@@ -1,5 +1,6 @@
 package com.dispensador.app.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,14 @@ fun HistoryScreen(
     val historial by dispenserViewModel.historial.collectAsState()
     var filterType by remember { mutableStateOf("Todos") }
 
+    // Log para debugging
+    LaunchedEffect(historial) {
+        Log.d("HistoryScreen", "Historial actualizado: ${historial.size} registros")
+        historial.forEach {
+            Log.d("HistoryScreen", "  - ${it.cantidad}ml ${it.tipo} ${it.obtenerFechaHora()}")
+        }
+    }
+
     val historialFiltrado = when (filterType) {
         "Manual" -> historial.filter { it.tipo == DispenserHistory.TIPO_MANUAL }
         "Programado" -> historial.filter { it.tipo == DispenserHistory.TIPO_PROGRAMADO }
@@ -53,7 +62,7 @@ fun HistoryScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Historial",
+                            text = "Historial (${historial.size})",
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
@@ -87,7 +96,7 @@ fun HistoryScreen(
                     FilterChip(
                         selected = filterType == "Todos",
                         onClick = { filterType = "Todos" },
-                        label = { Text("Todos") },
+                        label = { Text("Todos (${historial.size})") },
                         leadingIcon = {
                             if (filterType == "Todos") {
                                 Icon(
@@ -101,7 +110,9 @@ fun HistoryScreen(
                     FilterChip(
                         selected = filterType == "Manual",
                         onClick = { filterType = "Manual" },
-                        label = { Text("Manual") },
+                        label = {
+                            Text("Manual (${historial.count { it.tipo == DispenserHistory.TIPO_MANUAL }})")
+                        },
                         leadingIcon = {
                             if (filterType == "Manual") {
                                 Icon(
@@ -115,7 +126,9 @@ fun HistoryScreen(
                     FilterChip(
                         selected = filterType == "Programado",
                         onClick = { filterType = "Programado" },
-                        label = { Text("Programado") },
+                        label = {
+                            Text("Auto (${historial.count { it.tipo == DispenserHistory.TIPO_PROGRAMADO }})")
+                        },
                         leadingIcon = {
                             if (filterType == "Programado") {
                                 Icon(
@@ -189,17 +202,25 @@ fun HistoryScreen(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "No hay registros",
+                                text = if (historial.isEmpty()) "No hay registros" else "No hay registros de tipo $filterType",
                                 fontSize = 16.sp,
                                 color = Color(0xFF666666)
                             )
+                            if (historial.isEmpty()) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Dispensa agua para ver el historial",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF999999)
+                                )
+                            }
                         }
                     }
                 } else {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(historialFiltrado) { registro ->
+                        items(historialFiltrado, key = { it.id }) { registro ->
                             HistoryItem(history = registro)
                         }
                     }

@@ -4,7 +4,7 @@
             "outputFile": "com.dispensador.app-mergeDebugResources-65:/values-w600dp-land-v13/values-w600dp-land-v13.xml",
             "map": [
                 {
-                    "source": "/Users/navi/.gradle/caches/8.11.1/transforms/c9bba23f6a52df9a853d9b98275ff247/transformed/material-1.13.0/res/values-w600dp-land-v13/values-w600dp-land-v13.xml",
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\c9bba23f6a52df9a853d9b98275ff247\\transformed\\material-1.13.0\\res\\values-w600dp-land-v13\\values-w600dp-land-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -45,8 +45,8 @@ data class DispenserSchedule(
     /**
      * Verifica si el horario es válido para ejecutarse
      */
-    fun esValido(): Boolean = validarHorario() && validarCantidad() && 
-        (dias.isNotEmpty() || fechaEspecifica > 0)
+    fun esValido(): Boolean = validarHorario() && validarCantidad() &&
+            (dias.isNotEmpty() || fechaEspecifica > 0)
 
     /**
      * Obtiene los nombres de los días seleccionados
@@ -56,7 +56,11 @@ data class DispenserSchedule(
             val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             return formato.format(Date(fechaEspecifica))
         }
-        
+
+        if (dias.isEmpty()) {
+            return "Sin días seleccionados"
+        }
+
         val nombresDias = listOf("Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb")
         return dias.sorted().joinToString(", ") { nombresDias.getOrNull(it) ?: "" }
     }
@@ -66,14 +70,14 @@ data class DispenserSchedule(
      */
     fun debeEjecutarseHoy(): Boolean {
         if (!activo) return false
-        
+
         val hoy = Calendar.getInstance()
         val diaActual = hoy.get(Calendar.DAY_OF_WEEK) - 1 // Ajustar para que Domingo = 0
-        
+
         return if (fechaEspecifica > 0) {
             val fechaHorario = Calendar.getInstance().apply { timeInMillis = fechaEspecifica }
             hoy.get(Calendar.YEAR) == fechaHorario.get(Calendar.YEAR) &&
-            hoy.get(Calendar.DAY_OF_YEAR) == fechaHorario.get(Calendar.DAY_OF_YEAR)
+                    hoy.get(Calendar.DAY_OF_YEAR) == fechaHorario.get(Calendar.DAY_OF_YEAR)
         } else {
             dias.contains(diaActual)
         }

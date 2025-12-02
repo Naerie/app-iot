@@ -35,6 +35,11 @@ fun ControlScreen(
     var showSuccessMessage by remember { mutableStateOf(false) }
     var successMessage by remember { mutableStateOf("") }
 
+    // Resetear mensajes al entrar a la pantalla
+    LaunchedEffect(Unit) {
+        dispenserViewModel.resetOperationState()
+    }
+
     // Observar cambios en el estado de operación
     LaunchedEffect(operationState) {
         when (operationState) {

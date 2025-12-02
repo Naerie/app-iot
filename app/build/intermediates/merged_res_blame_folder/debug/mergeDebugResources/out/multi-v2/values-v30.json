@@ -4,7 +4,7 @@
             "outputFile": "com.dispensador.app-mergeDebugResources-65:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "/Users/navi/.gradle/caches/8.11.1/transforms/0671583e69c00514abb94d9e09b2863f/transformed/jetified-material3/res/values-v30/values-v30.xml",
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\0671583e69c00514abb94d9e09b2863f\\transformed\\jetified-material3\\res\\values-v30\\values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

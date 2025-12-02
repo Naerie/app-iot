@@ -66,10 +66,10 @@ class FirebaseRepository {
                 try {
                     val estado = snapshot.getValue(DispenserState::class.java) ?: DispenserState()
                     Log.d(TAG, "Estado actualizado: $estado")
-                    
+
                     // Detectar cambios en nivel de agua y generar alertas
                     detectarCambiosYGenerarAlertas(estado)
-                    
+
                     trySend(estado)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando estado", e)
@@ -102,7 +102,7 @@ class FirebaseRepository {
             // Detectar cambio en nivel de agua
             if (previousWaterLevel != null && previousWaterLevel != estado.nivelAgua) {
                 Log.d(TAG, "Cambio detectado en nivel de agua: $previousWaterLevel -> ${estado.nivelAgua}")
-                
+
                 // Generar alerta si el nivel es bajo
                 if (estado.nivelAgua < 20) {
                     generarAlertaNivelBajo(estado.nivelAgua)
@@ -113,7 +113,7 @@ class FirebaseRepository {
             // Detectar cambio en conexión
             if (previousConnection != null && previousConnection != estado.conexion) {
                 Log.d(TAG, "Cambio detectado en conexión: $previousConnection -> ${estado.conexion}")
-                
+
                 if (!estado.conexion) {
                     generarAlertaConexionPerdida()
                 }
@@ -131,11 +131,11 @@ class FirebaseRepository {
     private fun generarAlertaNivelBajo(nivel: Int) {
         try {
             if (database == null) return
-            
+
             val notifRef = database!!.getReference(PATH_NOTIFICACIONES)
             notifRef.child("nivelBajo").setValue(true)
             notifRef.child("ultimaAlerta").setValue(System.currentTimeMillis())
-            
+
             Log.d(TAG, "Alerta generada: Nivel bajo de agua ($nivel%)")
         } catch (e: Exception) {
             Log.e(TAG, "Error al generar alerta de nivel bajo", e)
@@ -148,11 +148,11 @@ class FirebaseRepository {
     private fun generarAlertaConexionPerdida() {
         try {
             if (database == null) return
-            
+
             val notifRef = database!!.getReference(PATH_NOTIFICACIONES)
             notifRef.child("conexionPerdida").setValue(true)
             notifRef.child("ultimaAlerta").setValue(System.currentTimeMillis())
-            
+
             Log.d(TAG, "Alerta generada: Conexión perdida")
         } catch (e: Exception) {
             Log.e(TAG, "Error al generar alerta de conexión", e)
@@ -257,10 +257,37 @@ class FirebaseRepository {
                 try {
                     val horarios = mutableListOf<DispenserSchedule>()
                     for (child in snapshot.children) {
-                        child.getValue(DispenserSchedule::class.java)?.let {
-                            horarios.add(it)
+                        try {
+                            val id = child.key ?: ""
+                            val hora = child.child("hora").getValue(String::class.java) ?: "08:00"
+                            val cantidad = child.child("cantidad").getValue(Int::class.java) ?: 250
+                            val activo = child.child("activo").getValue(Boolean::class.java) ?: true
+                            val fechaEspecifica = child.child("fechaEspecifica").getValue(Long::class.java) ?: 0L
+                            val fechaCreacion = child.child("fechaCreacion").getValue(Long::class.java) ?: 0L
+
+                            // Convertir dias de objeto a lista
+                            val diasList = mutableListOf<Int>()
+                            val diasSnapshot = child.child("dias")
+                            for (diaChild in diasSnapshot.children) {
+                                diaChild.getValue(Int::class.java)?.let { diasList.add(it) }
+                            }
+
+                            val horario = DispenserSchedule(
+                                id = id,
+                                hora = hora,
+                                cantidad = cantidad,
+                                dias = diasList,
+                                fechaEspecifica = fechaEspecifica,
+                                activo = activo,
+                                fechaCreacion = fechaCreacion
+                            )
+                            horarios.add(horario)
+                            Log.d(TAG, "Horario cargado: $hora con días: $diasList")
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error procesando horario individual", e)
                         }
                     }
+                    Log.d(TAG, "Total horarios cargados: ${horarios.size}")
                     trySend(horarios)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando horarios", e)
@@ -303,10 +330,29 @@ class FirebaseRepository {
                 try {
                     val historial = mutableListOf<DispenserHistory>()
                     for (child in snapshot.children) {
-                        child.getValue(DispenserHistory::class.java)?.let {
-                            historial.add(it)
+                        try {
+                            val id = child.key ?: ""
+                            val timestamp = child.child("timestamp").getValue(Long::class.java) ?: 0L
+                            val cantidad = child.child("cantidad").getValue(Int::class.java) ?: 0
+                            val tipo = child.child("tipo").getValue(String::class.java) ?: ""
+                            val usuario = child.child("usuario").getValue(String::class.java) ?: ""
+                            val exitoso = child.child("exitoso").getValue(Boolean::class.java) ?: true
+
+                            val entry = DispenserHistory(
+                                id = id,
+                                timestamp = timestamp,
+                                cantidad = cantidad,
+                                tipo = tipo,
+                                usuario = usuario,
+                                exitoso = exitoso
+                            )
+                            historial.add(entry)
+                            Log.d(TAG, "Historial cargado: $cantidad ml - $tipo")
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error procesando entrada de historial", e)
                         }
                     }
+                    Log.d(TAG, "Total historial cargado: ${historial.size}")
                     trySend(historial.reversed())
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando historial", e)
@@ -349,19 +395,19 @@ class FirebaseRepository {
 
             database!!.getReference(PATH_CONTROL).setValue(control).await()
 
-            // Guardar en historial
+            // Guardar en historial con ID generado por Firebase
+            val historialRef = database!!.getReference(PATH_HISTORIAL).push()
+            val historyId = historialRef.key ?: return Result.failure(Exception("No se pudo generar ID"))
+
             val historyEntry = DispenserHistory(
+                id = historyId,
                 tipo = DispenserHistory.TIPO_MANUAL,
                 cantidad = cantidad,
                 timestamp = System.currentTimeMillis(),
-                exitoso = true   // ← REEMPLAZA estado
+                exitoso = true
             )
 
-
-            database!!.getReference(PATH_HISTORIAL)
-                .child(historyEntry.id)
-                .setValue(historyEntry)
-                .await()
+            historialRef.setValue(historyEntry).await()
 
             Log.d(TAG, "Dispensado manual: $cantidad ml - Guardado en historial")
             Result.success(Unit)
@@ -437,16 +483,18 @@ class FirebaseRepository {
                 return Result.failure(Exception("Firebase no inicializado"))
             }
 
-            // Generar un ID único si el horario es nuevo (id vacío)
-            val ref = database!!.getReference(PATH_HORARIOS)
-            val newId = if (horario.id.isEmpty()) ref.push().key!! else horario.id
-            
-            // Crear una copia del horario con el ID generado
-            val horarioConId = horario.copy(id = newId, fechaCreacion = System.currentTimeMillis())
+            // Generar ID con Firebase push()
+            val horarioRef = database!!.getReference(PATH_HORARIOS).push()
+            val horarioId = horarioRef.key ?: return Result.failure(Exception("No se pudo generar ID"))
 
-            ref.child(newId).setValue(horarioConId).await()
+            val nuevoHorario = horario.copy(
+                id = horarioId,
+                fechaCreacion = System.currentTimeMillis()
+            )
 
-            Log.d(TAG, "Horario agregado: ${horarioConId.hora} con ID: $newId")
+            horarioRef.setValue(nuevoHorario).await()
+
+            Log.d(TAG, "Horario agregado: ${horario.hora}")
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error en agregarHorario", e)
