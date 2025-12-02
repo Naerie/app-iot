@@ -13,7 +13,7 @@ const char* password = "Tomate124";
 // -------------------------------------------------------------
 // CONFIG FIREBASE (REST API)
 // -------------------------------------------------------------
-const char* firebase_host = "https://dispensador-b07b1-default-rtdb.firebaseio.com";
+const char* firebase_host = "https://dispensador-1c7a0-default-rtdb.firebaseio.com";
 
 // Rutas Firebase
 String estado_url      = String(firebase_host) + "/dispensador/estado.json";
@@ -37,7 +37,11 @@ const long PESO_TAZA_VACIA = 6;
 long pesoActual = 0;
 bool tazaPresente = false;
 bool llenando = false;
-int nivelAgua = 100;
+
+int nivelAgua = 0;
+long pesoMaximoTaza = 250; // 100% = 250g
+
+bool horarioEjecutado = false;
 
 bool modoAutomatico = false;
 bool programacionActiva = false;
@@ -70,6 +74,24 @@ void dispensar(long cantidad);
 void activarBomba();
 void desactivarBomba();
 void leerHorarios();
+int calcularNivelAgua(long peso);
+
+// -------------------------------------------------------------
+// CÁLCULO PORCENTAJE DE LLENADO
+// -------------------------------------------------------------
+int calcularNivelAgua(long peso) {
+  if (!tazaPresente) return 0;
+
+  long pesoLiquido = peso - PESO_TAZA_VACIA;
+  if (pesoLiquido < 0) pesoLiquido = 0;
+
+  int porcentaje = (pesoLiquido * 100) / pesoMaximoTaza;
+
+  if (porcentaje < 0) porcentaje = 0;
+  if (porcentaje > 100) porcentaje = 100;
+
+  return porcentaje;
+}
 
 // -------------------------------------------------------------
 // SETUP
@@ -78,7 +100,6 @@ void setup() {
   Serial.begin(115200);
   delay(300);
 
-  // HX711
   scale.begin(DT, CLK);
   scale.set_scale(calibration_factor);
   scale.tare();
@@ -86,7 +107,6 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, LOW);
 
-  // WiFi
   Serial.print("Conectando a WiFi...");
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -95,7 +115,6 @@ void setup() {
   }
   Serial.println("\nWiFi conectado.");
 
-  // HTTPS sin verificar certificado (desarrollo)
   client.setInsecure();
 
   Serial.println("Sistema listo.");
@@ -113,25 +132,24 @@ void loop() {
       pesoActual = scale.get_units(5);
       tazaPresente = (pesoActual > PESO_TAZA_VACIA);
     }
+
+    nivelAgua = calcularNivelAgua(pesoActual);
+
     lastSensorRead = now;
   }
 
-  // Lógica de dispensado
   handleLogica();
 
-  // Leer control cada 3s
   if (now - lastControlRead >= 3000) {
     leerControl();
     lastControlRead = now;
   }
 
-  // Actualizar estado cada 5s
   if (now - lastEstadoUpdate >= 5000) {
     actualizarEstado();
     lastEstadoUpdate = now;
   }
 
-  // Leer horarios cada 1 minuto
   if (now - lastScheduleCheck >= 60000) {
     leerHorarios();
     lastScheduleCheck = now;
@@ -139,7 +157,7 @@ void loop() {
 }
 
 // -------------------------------------------------------------
-// FUNCIONES FIREBASE REST
+// FIREBASE PUT
 // -------------------------------------------------------------
 bool firebasePUT(String url, String json) {
   HTTPClient https;
@@ -153,15 +171,20 @@ bool firebasePUT(String url, String json) {
     https.end();
     return true;
   }
+
   Serial.printf("PUT error %d: %s\n", code, https.errorToString(code).c_str());
   https.end();
   return false;
 }
 
+// -------------------------------------------------------------
+// FIREBASE GET
+// -------------------------------------------------------------
 bool firebaseGET(String url, String &response) {
   HTTPClient https;
 
   if (!https.begin(client, url)) return false;
+
   int code = https.GET();
 
   if (code == 200) {
@@ -169,47 +192,45 @@ bool firebaseGET(String url, String &response) {
     https.end();
     return true;
   }
+
   Serial.printf("GET error %d: %s\n", code, https.errorToString(code).c_str());
   https.end();
   return false;
 }
 
 // -------------------------------------------------------------
-// LEER CONTROL DESDE FIREBASE
+// LEER CONTROL MANUAL
 // -------------------------------------------------------------
 void leerControl() {
   String response;
   if (!firebaseGET(control_url, response)) return;
-
   if (response == "null") return;
 
   StaticJsonDocument<400> doc;
   deserializeJson(doc, response);
 
-  modoAutomatico       = doc["modoAutomatico"] | false;
-  programacionActiva   = doc["programacionActiva"] | false;
+  modoAutomatico     = doc["modoAutomatico"] | false;
+  programacionActiva = doc["programacionActiva"] | false;
 
   long cantidad = doc["cantidadDispensado"] | 0;
 
   if (cantidad > 0) {
-    cantidadManual = cantidad;
-    Serial.printf("Dispensado manual solicitado: %ld\n", cantidadManual);
-    dispensar(cantidadManual);
-
-    // Reset en Firebase
+    Serial.printf("Dispensado manual solicitado: %ld\n", cantidad);
+    dispensar(cantidad);
     firebasePUT(control_url, "{\"cantidadDispensado\":0}");
   }
 }
 
 // -------------------------------------------------------------
-// ACTUALIZAR ESTADO EN FIREBASE
+// ACTUALIZAR ESTADO
 // -------------------------------------------------------------
 void actualizarEstado() {
   StaticJsonDocument<300> j;
-  j["peso"] = pesoActual;
+
+  j["peso"]         = pesoActual;
   j["tazaPresente"] = tazaPresente;
-  j["llenando"] = llenando;
-  j["nivelAgua"] = nivelAgua;
+  j["llenando"]     = llenando;
+  j["nivelAgua"]    = nivelAgua;
 
   String json;
   serializeJson(j, json);
@@ -219,10 +240,18 @@ void actualizarEstado() {
 }
 
 // -------------------------------------------------------------
-// LÓGICA DE DISPENSADO
+// LÓGICA DE LLENADO
 // -------------------------------------------------------------
 void handleLogica() {
   if (llenadoEnCurso) {
+
+    if (pesoActual >= pesoMaximoTaza) {
+      Serial.println("⚠️ Límite de seguridad alcanzado. Deteniendo bomba.");
+      desactivarBomba();
+      llenadoEnCurso = false;
+      return;
+    }
+
     if (pesoActual < objetivoPeso) {
       activarBomba();
     } else {
@@ -230,15 +259,14 @@ void handleLogica() {
       llenadoEnCurso = false;
       Serial.println("Dispensado completado.");
     }
-    return;
-  }
 
-  // Automático basado en horarios
-  if (modoAutomatico && programacionActiva) {
-    leerHorarios();
+    return;
   }
 }
 
+// -------------------------------------------------------------
+// INICIAR DISPENSADO
+// -------------------------------------------------------------
 void dispensar(long cantidad) {
   if (!tazaPresente) {
     Serial.println("❌ No hay taza.");
@@ -248,11 +276,19 @@ void dispensar(long cantidad) {
   if (llenadoEnCurso) return;
 
   objetivoPeso = pesoActual + cantidad;
+
+  if (objetivoPeso > pesoMaximoTaza) {
+    objetivoPeso = pesoMaximoTaza;
+  }
+
   llenadoEnCurso = true;
 
   Serial.printf("Iniciando dispensado: objetivo %ld g\n", objetivoPeso);
 }
 
+// -------------------------------------------------------------
+// CONTROL BOMBA
+// -------------------------------------------------------------
 void activarBomba() {
   if (!llenando) {
     digitalWrite(RELAY_PIN, HIGH);
@@ -266,14 +302,57 @@ void desactivarBomba() {
 }
 
 // -------------------------------------------------------------
-// LEER HORARIOS (SIMPLE)
+// HORARIOS AUTOMÁTICOS
 // -------------------------------------------------------------
 void leerHorarios() {
   String response;
   if (!firebaseGET(horarios_url, response)) return;
-
   if (response == "null") return;
 
-  Serial.println("Horarios leídos (no ejecutados, solo debug):");
-  Serial.println(response);
+  StaticJsonDocument<300> doc;
+  deserializeJson(doc, response);
+
+  bool activo = doc["activo"] | false;
+  if (!activo) return;
+
+  if (!modoAutomatico || !programacionActiva) return;
+
+  String horaProgramada = doc["hora"] | "";
+  int cantidadMl = doc["cantidad"] | 0;
+
+  JsonArray dias = doc["dias"];
+
+  time_t now = time(nullptr);
+  struct tm *t = localtime(&now);
+
+  int diaSemana = t->tm_wday;
+
+  bool diaCoincide = false;
+  for (int d : dias) {
+    if (d == diaSemana) diaCoincide = true;
+  }
+  if (!diaCoincide) return;
+
+  char horaActual[6];
+  snprintf(horaActual, 6, "%02d:%02d", t->tm_hour, t->tm_min);
+
+  if (horaProgramada == horaActual) {
+
+    if (!horarioEjecutado) {
+      Serial.println("⏰ EJECUTANDO HORARIO AUTOMÁTICO");
+
+      long cantidad = cantidadMl;
+
+      if (pesoActual + cantidad > pesoMaximoTaza) {
+        cantidad = pesoMaximoTaza - pesoActual;
+        if (cantidad < 0) cantidad = 0;
+      }
+
+      if (cantidad > 0) dispensar(cantidad);
+
+      horarioEjecutado = true;
+    }
+  } else {
+    horarioEjecutado = false;
+  }
 }
