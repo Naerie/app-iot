@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-land/values-land.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-land/values-land.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\8784f56800fafbb8896beb7e5909df9f\\transformed\\material-1.13.0\\res\\values-land\\values-land.xml",

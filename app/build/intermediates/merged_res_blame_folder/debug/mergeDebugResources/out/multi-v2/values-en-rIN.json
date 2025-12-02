@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-en-rIN/values-en-rIN.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-en-rIN/values-en-rIN.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\776a22c957b4aaf382178c3fbbfe35aa\\transformed\\core-1.17.0\\res\\values-en-rIN\\values-en-rIN.xml",

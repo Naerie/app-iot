@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dispensador.app.composables.ControlButton
 import com.dispensador.app.composables.DangerControlButton
-import com.dispensador.app.composables.StatusCard
-import com.dispensador.app.data.DispenserControl
 import com.dispensador.app.viewmodel.DispenserViewModel
 import com.dispensador.app.viewmodel.OperationState
 import kotlin.math.roundToInt
@@ -31,7 +29,6 @@ fun ControlScreen(
     onNavigateBack: () -> Unit
 ) {
     val estado by dispenserViewModel.estado.collectAsState()
-    val control by dispenserViewModel.control.collectAsState()
     val operationState by dispenserViewModel.operationState.collectAsState()
 
     var sliderValue by remember { mutableStateOf(250f) }
@@ -47,7 +44,9 @@ fun ControlScreen(
                 dispenserViewModel.resetOperationState()
             }
             is OperationState.Error -> {
-                // Mostrar error en Snackbar
+                successMessage = (operationState as OperationState.Error).message
+                showSuccessMessage = true
+                dispenserViewModel.resetOperationState()
             }
             else -> {}
         }
@@ -71,7 +70,7 @@ fun ControlScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Control Manual",
+                            text = "Control",
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
@@ -113,19 +112,6 @@ fun ControlScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Estado actual
-                StatusCard(
-                    title = "Estado del Dispositivo",
-                    status = estado?.obtenerEstado() ?: "Desconocido",
-                    statusColor = when {
-                        estado?.conexion == false -> Color(0xFFCCCCCC)
-                        estado?.enUso == true -> Color(0xFF00D2CF)
-                        estado?.encendido == true -> Color(0xFF4CAF50)
-                        else -> Color(0xFFFF9800)
-                    },
-                    icon = Icons.Default.ArrowBack
-                )
-
                 // Advertencia si no puede dispensar
                 if (estado?.puedeDispensar() == false) {
                     Card(
@@ -147,7 +133,7 @@ fun ControlScreen(
                             )
                             Column {
                                 Text(
-                                    text = "No se puede dispensar",
+                                    text = "No disponible",
                                     fontWeight = FontWeight.Bold,
                                     color = Color(0xFFFF6F00)
                                 )
@@ -222,7 +208,7 @@ fun ControlScreen(
                     )
                 }
 
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                 // Cantidad personalizada con slider
                 Text(
@@ -261,7 +247,7 @@ fun ControlScreen(
                             value = sliderValue,
                             onValueChange = { sliderValue = it },
                             valueRange = 50f..500f,
-                            steps = 44, // 450/10 = 45 pasos de 10ml
+                            steps = 44,
                             colors = SliderDefaults.colors(
                                 thumbColor = Color(0xFF00D2CF),
                                 activeTrackColor = Color(0xFF00D2CF),
@@ -276,36 +262,34 @@ fun ControlScreen(
                             Text(
                                 text = "50 ml",
                                 fontSize = 12.sp,
-                                color = Color(0xFF666666)
+                                color = Color(0xFF999999)
                             )
                             Text(
                                 text = "500 ml",
                                 fontSize = 12.sp,
-                                color = Color(0xFF666666)
+                                color = Color(0xFF999999)
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         ControlButton(
-                            text = if (operationState is OperationState.Loading) 
-                                "Dispensando..." 
-                            else 
-                                "Dispensar ${sliderValue.roundToInt()} ml",
+                            text = "Dispensar ${sliderValue.roundToInt()} ml",
                             onClick = {
                                 dispenserViewModel.dispensarManual(sliderValue.roundToInt())
                             },
                             enabled = estado?.puedeDispensar() == true &&
-                                    operationState !is OperationState.Loading
+                                    operationState !is OperationState.Loading,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
 
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                // Control del motor
+                // Botón de emergencia
                 Text(
-                    text = "Control del Motor",
+                    text = "Emergencia",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF333333)
@@ -316,39 +300,9 @@ fun ControlScreen(
                     onClick = {
                         dispenserViewModel.detenerMotor()
                     },
-                    enabled = estado?.conexion == true &&
-                            operationState !is OperationState.Loading
+                    enabled = operationState !is OperationState.Loading,
+                    modifier = Modifier.fillMaxWidth()
                 )
-
-                // Información adicional
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE3F2FD)
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = "ℹ️ Información",
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1976D2),
-                            fontSize = 14.sp
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "• Asegúrese de colocar un recipiente antes de dispensar\n" +
-                                    "• El nivel de agua actual es: ${estado?.nivelAgua ?: 0}%\n" +
-                                    "• Use el botón 'Detener Motor' en caso de emergencia",
-                            fontSize = 12.sp,
-                            color = Color(0xFF666666),
-                            lineHeight = 18.sp
-                        )
-                    }
-                }
             }
         }
     }

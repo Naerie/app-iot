@@ -53,31 +53,17 @@ fun HomeScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Column {
-                            Text(
-                                text = "Dispensador",
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                fontSize = 20.sp
-                            )
-                            Text(
-                                text = authViewModel.getCurrentUserEmail() ?: "",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 12.sp
-                            )
-                        }
+                        Text(
+                            text = "Dispensador",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 20.sp
+                        )
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color(0xFF00D2CF)
                     ),
                     actions = {
-                        // Indicador WiFi compacto
-                        CompactWiFiIndicator(
-                            conectado = estado?.conexion ?: false,
-                            intensidad = estado?.intensidadWifi ?: 0,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-
                         // Notificaciones
                         BadgedBox(
                             badge = {
@@ -131,24 +117,56 @@ fun HomeScreen(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Estado del dispositivo
-                    StatusCard(
-                        title = "Estado del Dispositivo",
-                        status = estado?.obtenerEstado() ?: "Desconocido",
-                        statusColor = when {
-                            estado?.conexion == false -> Color(0xFFCCCCCC)
-                            estado?.enUso == true -> Color(0xFF00D2CF)
-                            estado?.encendido == true -> Color(0xFF4CAF50)
-                            else -> Color(0xFFFF9800)
-                        },
-                        icon = when {
-                            estado?.enUso == true -> Icons.Default.PlayArrow
-                            estado?.encendido == true -> Icons.Default.Power
-                            else -> Icons.Default.PowerOff
+                    // Estado compacto
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 4.dp
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = estado?.obtenerEstado() ?: "Desconocido",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF333333)
+                                )
+                                Text(
+                                    text = if (control?.modoAutomatico == true) "Modo Automático" else "Modo Manual",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF666666)
+                                )
+                            }
+                            Icon(
+                                imageVector = when {
+                                    estado?.enUso == true -> Icons.Default.PlayArrow
+                                    estado?.encendido == true -> Icons.Default.Power
+                                    else -> Icons.Default.PowerOff
+                                },
+                                contentDescription = null,
+                                tint = when {
+                                    estado?.conexion == false -> Color(0xFFCCCCCC)
+                                    estado?.enUso == true -> Color(0xFF00D2CF)
+                                    estado?.encendido == true -> Color(0xFF4CAF50)
+                                    else -> Color(0xFFFF9800)
+                                },
+                                modifier = Modifier.size(40.dp)
+                            )
                         }
-                    )
+                    }
 
-                    // Nivel de agua y WiFi
+                    // Nivel de agua y conexión
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -163,93 +181,50 @@ fun HomeScreen(
                                 defaultElevation = 4.dp
                             )
                         ) {
-                            Box(
+                            Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp),
-                                contentAlignment = Alignment.Center
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                Text(
+                                    text = "Agua",
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF666666)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
                                 WaterLevelIndicator(
                                     nivel = estado?.nivelAgua ?: 0
                                 )
                             }
                         }
 
-                        Column(
+                        Card(
                             modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                            shape = MaterialTheme.shapes.medium,
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 4.dp
+                            )
                         ) {
-                            // WiFi
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = MaterialTheme.shapes.medium,
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White
-                                ),
-                                elevation = CardDefaults.cardElevation(
-                                    defaultElevation = 4.dp
-                                )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp)
-                                ) {
-                                    WiFiIndicator(
-                                        conectado = estado?.conexion ?: false,
-                                        intensidad = estado?.intensidadWifi ?: 0
-                                    )
-                                }
-                            }
-
-                            // Modo
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = MaterialTheme.shapes.medium,
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.White
-                                ),
-                                elevation = CardDefaults.cardElevation(
-                                    defaultElevation = 4.dp
+                                Text(
+                                    text = "WiFi",
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF666666)
                                 )
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp)
-                                ) {
-                                    Text(
-                                        text = "Modo",
-                                        fontSize = 14.sp,
-                                        color = Color(0xFF666666)
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = if (control?.modoAutomatico == true) 
-                                                "Automático" 
-                                            else 
-                                                "Manual",
-                                            fontSize = 16.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color(0xFF333333)
-                                        )
-                                        Switch(
-                                            checked = control?.modoAutomatico ?: false,
-                                            onCheckedChange = { automatico ->
-                                                dispenserViewModel.cambiarModo(automatico)
-                                            },
-                                            colors = SwitchDefaults.colors(
-                                                checkedThumbColor = Color.White,
-                                                checkedTrackColor = Color(0xFF00D2CF)
-                                            )
-                                        )
-                                    }
-                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                WiFiIndicator(
+                                    conectado = estado?.conexion ?: false,
+                                    intensidad = estado?.intensidadWifi ?: 0
+                                )
                             }
                         }
                     }

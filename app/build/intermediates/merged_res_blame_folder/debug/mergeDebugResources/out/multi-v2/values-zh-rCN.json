@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-zh-rCN/values-zh-rCN.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-zh-rCN/values-zh-rCN.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\776a22c957b4aaf382178c3fbbfe35aa\\transformed\\core-1.17.0\\res\\values-zh-rCN\\values-zh-rCN.xml",
@@ -18,23 +18,6 @@
                         "startOffsets": "3415,3507,3608,3702,3796,3889,3983,19245",
                         "endColumns": "91,100,93,93,92,93,95,100",
                         "endOffsets": "3502,3603,3697,3791,3884,3978,4074,19341"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\1f6fc9606446c032a3fa461cc4ffd32d\\transformed\\jetified-play-services-basement-18.5.0\\res\\values-zh-rCN\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "199",
-                        "endColumns": "94",
-                        "endOffsets": "293"
-                    },
-                    "to": {
-                        "startLines": "60",
-                        "startColumns": "4",
-                        "startOffsets": "5364",
-                        "endColumns": "98",
-                        "endOffsets": "5458"
                     }
                 },
                 {
@@ -88,6 +71,23 @@
                         "endLines": "5,36,37,38,39,47,48,49,74,75,76,80,83,84,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,216,220,221,223",
                         "endColumns": "12,63,61,69,76,90,105,72,50,61,76,58,58,73,77,60,56,55,58,57,58,60,51,53,84,55,57,53,64,91,73,71,78,73,75,121,61,61,98,78,73,49,50,65,63,68,70,70,60,70,66,59,85,78,66,82,84,73,64,75,47,72,63,75,77,61,63,62,64,79,71,77,72,73,74,53,54,68,74,72,69",
                         "endOffsets": "292,3201,3263,3333,3410,4165,4271,4344,6698,6760,6837,7182,7392,7466,13938,13999,14056,14112,14171,14229,14288,14349,14401,14455,14540,14596,14654,14708,14773,14865,14939,15011,15090,15164,15240,15362,15424,15486,15585,15664,15738,15788,15839,15905,15969,16038,16109,16180,16241,16312,16379,16439,16525,16604,16671,16754,16839,16913,16978,17054,17102,17175,17239,17315,17393,17455,17519,17582,17647,17727,17799,17877,17950,18024,18099,18153,18208,18430,18732,18805,18943"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\bd2d1e2817f52161e63602b73fb7fc16\\transformed\\jetified-play-services-basement-18.4.0\\res\\values-zh-rCN\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "199",
+                        "endColumns": "94",
+                        "endOffsets": "293"
+                    },
+                    "to": {
+                        "startLines": "60",
+                        "startColumns": "4",
+                        "startOffsets": "5364",
+                        "endColumns": "98",
+                        "endOffsets": "5458"
                     }
                 },
                 {

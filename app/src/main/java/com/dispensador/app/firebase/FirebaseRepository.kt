@@ -15,7 +15,7 @@ import kotlinx.coroutines.tasks.await
 
 /**
  * Repositorio unificado para todas las operaciones de Firebase
- * Versión con manejo robusto de errores
+ * Versión con manejo robusto de errores y guardado de historial
  */
 class FirebaseRepository {
 
@@ -42,6 +42,10 @@ class FirebaseRepository {
         const val PATH_NOTIFICACIONES = "dispensador/notificaciones"
     }
 
+    // Variables para detectar cambios y generar alertas
+    private var previousWaterLevel: Int? = null
+    private var previousConnection: Boolean? = null
+
     // ==================== OBSERVADORES (FLOWS) ====================
 
     /**
@@ -62,6 +66,10 @@ class FirebaseRepository {
                 try {
                     val estado = snapshot.getValue(DispenserState::class.java) ?: DispenserState()
                     Log.d(TAG, "Estado actualizado: $estado")
+                    
+                    // Detectar cambios en nivel de agua y generar alertas
+                    detectarCambiosYGenerarAlertas(estado)
+                    
                     trySend(estado)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error procesando estado", e)
@@ -84,6 +92,71 @@ class FirebaseRepository {
     }.catch { e ->
         Log.e(TAG, "Error en observarEstado", e)
         emit(DispenserState())
+    }
+
+    /**
+     * Detecta cambios importantes y genera alertas
+     */
+    private fun detectarCambiosYGenerarAlertas(estado: DispenserState) {
+        try {
+            // Detectar cambio en nivel de agua
+            if (previousWaterLevel != null && previousWaterLevel != estado.nivelAgua) {
+                Log.d(TAG, "Cambio detectado en nivel de agua: $previousWaterLevel -> ${estado.nivelAgua}")
+                
+                // Generar alerta si el nivel es bajo
+                if (estado.nivelAgua < 20) {
+                    generarAlertaNivelBajo(estado.nivelAgua)
+                }
+            }
+            previousWaterLevel = estado.nivelAgua
+
+            // Detectar cambio en conexión
+            if (previousConnection != null && previousConnection != estado.conexion) {
+                Log.d(TAG, "Cambio detectado en conexión: $previousConnection -> ${estado.conexion}")
+                
+                if (!estado.conexion) {
+                    generarAlertaConexionPerdida()
+                }
+            }
+            previousConnection = estado.conexion
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al detectar cambios", e)
+        }
+    }
+
+    /**
+     * Genera alerta de nivel bajo de agua
+     */
+    private fun generarAlertaNivelBajo(nivel: Int) {
+        try {
+            if (database == null) return
+            
+            val notifRef = database!!.getReference(PATH_NOTIFICACIONES)
+            notifRef.child("nivelBajo").setValue(true)
+            notifRef.child("ultimaAlerta").setValue(System.currentTimeMillis())
+            
+            Log.d(TAG, "Alerta generada: Nivel bajo de agua ($nivel%)")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al generar alerta de nivel bajo", e)
+        }
+    }
+
+    /**
+     * Genera alerta de conexión perdida
+     */
+    private fun generarAlertaConexionPerdida() {
+        try {
+            if (database == null) return
+            
+            val notifRef = database!!.getReference(PATH_NOTIFICACIONES)
+            notifRef.child("conexionPerdida").setValue(true)
+            notifRef.child("ultimaAlerta").setValue(System.currentTimeMillis())
+            
+            Log.d(TAG, "Alerta generada: Conexión perdida")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al generar alerta de conexión", e)
+        }
     }
 
     /**
@@ -260,7 +333,7 @@ class FirebaseRepository {
     // ==================== OPERACIONES DE ESCRITURA ====================
 
     /**
-     * Dispensa agua manualmente
+     * Dispensa agua manualmente y guarda en historial
      */
     suspend fun dispensarManual(cantidad: Int): Result<Unit> {
         return try {
@@ -276,7 +349,21 @@ class FirebaseRepository {
 
             database!!.getReference(PATH_CONTROL).setValue(control).await()
 
-            Log.d(TAG, "Dispensado manual: $cantidad ml")
+            // Guardar en historial
+            val historyEntry = DispenserHistory(
+                tipo = DispenserHistory.TIPO_MANUAL,
+                cantidad = cantidad,
+                timestamp = System.currentTimeMillis(),
+                exitoso = true   // ← REEMPLAZA estado
+            )
+
+
+            database!!.getReference(PATH_HISTORIAL)
+                .child(historyEntry.id)
+                .setValue(historyEntry)
+                .await()
+
+            Log.d(TAG, "Dispensado manual: $cantidad ml - Guardado en historial")
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error en dispensarManual", e)

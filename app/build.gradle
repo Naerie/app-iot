@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.compose'
-    id 'com.google.gms.google-services'  // ← AGREGADO
+    id 'com.google.gms.google-services'   // Firebase
 }
 
 android {
@@ -43,13 +43,20 @@ android {
 }
 
 dependencies {
-    // Firebase
-    implementation 'com.google.firebase:firebase-database:22.0.1'
-    implementation 'com.google.firebase:firebase-auth:24.0.1'
-    implementation 'com.google.firebase:firebase-analytics:23.0.0'
+    // -----------------------------
+    // Firebase (VERSIONES ESTABLES)
+    // -----------------------------
+    implementation platform("com.google.firebase:firebase-bom:33.7.0")
+    implementation "com.google.firebase:firebase-auth"
+    implementation "com.google.firebase:firebase-database"
+    implementation "com.google.firebase:firebase-analytics"
+    implementation "com.google.firebase:firebase-messaging"
+
     implementation 'com.google.android.material:material:1.13.0'
 
-    // Compose
+    // -----------------------------
+    // Jetpack Compose
+    // -----------------------------
     def composeBom = platform('androidx.compose:compose-bom:2025.11.01')
     implementation composeBom
     androidTestImplementation composeBom
@@ -57,6 +64,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.17.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
     implementation 'androidx.activity:activity-compose:1.12.0'
+
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
@@ -66,5 +74,5 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended-android:1.7.8"
 }
 
-// ← AGREGAR ESTO AL FINAL
-apply plugin: 'com.google.gms.google-services'
+// No vuelvas a agregar google-services aquí
+// Ya está arriba correctamente.

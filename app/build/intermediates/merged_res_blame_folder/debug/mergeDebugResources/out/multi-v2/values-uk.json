@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-uk/values-uk.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-uk/values-uk.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\8784f56800fafbb8896beb7e5909df9f\\transformed\\material-1.13.0\\res\\values-uk\\values-uk.xml",
@@ -74,23 +74,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\1f6fc9606446c032a3fa461cc4ffd32d\\transformed\\jetified-play-services-basement-18.5.0\\res\\values-uk\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "141",
-                        "endOffsets": "336"
-                    },
-                    "to": {
-                        "startLines": "62",
-                        "startColumns": "4",
-                        "startOffsets": "6008",
-                        "endColumns": "145",
-                        "endOffsets": "6149"
-                    }
-                },
-                {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\e1e70b2029614fb536ef96dae979d4a6\\transformed\\jetified-foundation-release\\res\\values-uk\\values-uk.xml",
                     "from": {
                         "startLines": "2,3,4",
@@ -156,6 +139,23 @@
                         "startOffsets": "7223,7850,7957,8077",
                         "endColumns": "109,106,119,107",
                         "endOffsets": "7328,7952,8072,8180"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\bd2d1e2817f52161e63602b73fb7fc16\\transformed\\jetified-play-services-basement-18.4.0\\res\\values-uk\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "141",
+                        "endOffsets": "336"
+                    },
+                    "to": {
+                        "startLines": "62",
+                        "startColumns": "4",
+                        "startOffsets": "6008",
+                        "endColumns": "145",
+                        "endOffsets": "6149"
                     }
                 },
                 {

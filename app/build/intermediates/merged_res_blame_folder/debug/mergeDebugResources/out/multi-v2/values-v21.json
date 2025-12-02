@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-v21/values-v21.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-v21/values-v21.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\ff3e60ec4692f2a189d8409452ac3e44\\transformed\\jetified-credentials-play-services-auth-1.2.0-rc01\\res\\values-v21\\values-v21.xml",

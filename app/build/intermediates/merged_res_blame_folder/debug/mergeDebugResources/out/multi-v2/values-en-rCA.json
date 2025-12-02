@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-en-rCA/values-en-rCA.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\776a22c957b4aaf382178c3fbbfe35aa\\transformed\\core-1.17.0\\res\\values-en-rCA\\values-en-rCA.xml",

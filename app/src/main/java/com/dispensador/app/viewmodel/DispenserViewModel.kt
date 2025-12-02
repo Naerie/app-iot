@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 /**
  * ViewModel principal para gestionar el estado del dispensador
- * Versión con manejo robusto de errores que no crashea
+ * Versión con manejo robusto de errores y observación de alertas
  */
 class DispenserViewModel : ViewModel() {
 
@@ -47,6 +47,10 @@ class DispenserViewModel : ViewModel() {
     private val _firebaseInitialized = MutableStateFlow(false)
     val firebaseInitialized: StateFlow<Boolean> = _firebaseInitialized.asStateFlow()
 
+    // Variables para detectar cambios y generar alertas locales
+    private var previousWaterLevel: Int? = null
+    private var previousConnection: Boolean? = null
+
     init {
         Log.d(TAG, "DispenserViewModel inicializado")
         verificarFirebase()
@@ -78,10 +82,15 @@ class DispenserViewModel : ViewModel() {
      * Observar todos los datos de Firebase en tiempo real
      */
     private fun observarDatos() {
-        // Observar estado
+        // Observar estado y detectar cambios
         viewModelScope.launch {
             try {
                 repository.observarEstado().collect { estado ->
+                    // Detectar cambios importantes antes de actualizar el estado
+                    estado?.let { nuevoEstado ->
+                        detectarCambiosLocales(nuevoEstado)
+                    }
+                    
                     _estado.value = estado
                     _isLoading.value = false
                 }
@@ -107,8 +116,22 @@ class DispenserViewModel : ViewModel() {
         // Observar notificaciones
         viewModelScope.launch {
             try {
-                repository.observarNotificaciones().collect { notificaciones ->
-                    _notificaciones.value = notificaciones
+                repository.observarNotificaciones().collect { notif ->
+                    _notificaciones.value = notif
+
+                    notif?.let {
+                        if (it.nivelBajo) {
+                            Log.d(TAG, "⚠️ Alerta: Nivel de agua bajo")
+                        }
+
+                        if (_estado.value?.conexion == false) {
+                            Log.d(TAG, "⚠️ Alerta: Conexión perdida")
+                        }
+
+                        if (_estado.value?.nivelAgua == 0) {
+                            Log.d(TAG, "⚠️ Alerta: Contenedor vacío")
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error observando notificaciones", e)
@@ -142,6 +165,39 @@ class DispenserViewModel : ViewModel() {
     }
 
     /**
+     * Detecta cambios importantes en el estado y genera alertas locales
+     */
+    private fun detectarCambiosLocales(nuevoEstado: DispenserState) {
+        try {
+            // Detectar cambio en nivel de agua
+            if (previousWaterLevel != null && previousWaterLevel != nuevoEstado.nivelAgua) {
+                Log.d(TAG, "Cambio detectado en nivel de agua: $previousWaterLevel% -> ${nuevoEstado.nivelAgua}%")
+                
+                // Alerta si el nivel bajó significativamente
+                if (nuevoEstado.nivelAgua < 20 && (previousWaterLevel ?: 100) >= 20) {
+                    _operationState.value = OperationState.Success("⚠️ Nivel de agua bajo (${nuevoEstado.nivelAgua}%)")
+                }
+            }
+            previousWaterLevel = nuevoEstado.nivelAgua
+
+            // Detectar cambio en conexión
+            if (previousConnection != null && previousConnection != nuevoEstado.conexion) {
+                Log.d(TAG, "Cambio detectado en conexión: $previousConnection -> ${nuevoEstado.conexion}")
+                
+                if (!nuevoEstado.conexion) {
+                    _operationState.value = OperationState.Error("❌ Dispositivo desconectado")
+                } else {
+                    _operationState.value = OperationState.Success("✅ Dispositivo conectado")
+                }
+            }
+            previousConnection = nuevoEstado.conexion
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al detectar cambios locales", e)
+        }
+    }
+
+    /**
      * Dispensar agua manualmente
      */
     fun dispensarManual(cantidad: Int) {
@@ -150,7 +206,7 @@ class DispenserViewModel : ViewModel() {
             try {
                 val result = repository.dispensarManual(cantidad)
                 result.onSuccess {
-                    _operationState.value = OperationState.Success("Dispensando $cantidad ml")
+                    _operationState.value = OperationState.Success("✅ Dispensando $cantidad ml")
                 }.onFailure { error ->
                     _operationState.value = OperationState.Error(error.message ?: "Error al dispensar")
                 }

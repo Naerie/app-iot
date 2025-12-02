@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-kn/values-kn.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-kn/values-kn.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\e1e70b2029614fb536ef96dae979d4a6\\transformed\\jetified-foundation-release\\res\\values-kn\\values-kn.xml",
@@ -69,6 +69,23 @@
                         "startOffsets": "3724,3822,3925,4026,4132,4233,4341,22158",
                         "endColumns": "97,102,100,105,100,107,127,100",
                         "endOffsets": "3817,3920,4021,4127,4228,4336,4464,22254"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\bd2d1e2817f52161e63602b73fb7fc16\\transformed\\jetified-play-services-basement-18.4.0\\res\\values-kn\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "141",
+                        "endOffsets": "336"
+                    },
+                    "to": {
+                        "startLines": "60",
+                        "startColumns": "4",
+                        "startOffsets": "5963",
+                        "endColumns": "145",
+                        "endOffsets": "6104"
                     }
                 },
                 {
@@ -156,23 +173,6 @@
                         "startOffsets": "4955,5066,5236,5369,5484,5627,5756,5864,6109,6259,6372,6537,6672,6817,6974,7043,7106",
                         "endColumns": "110,169,132,114,142,128,107,98,149,112,164,134,144,156,68,62,84",
                         "endOffsets": "5061,5231,5364,5479,5622,5751,5859,5958,6254,6367,6532,6667,6812,6969,7038,7101,7186"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\1f6fc9606446c032a3fa461cc4ffd32d\\transformed\\jetified-play-services-basement-18.5.0\\res\\values-kn\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "141",
-                        "endOffsets": "336"
-                    },
-                    "to": {
-                        "startLines": "60",
-                        "startColumns": "4",
-                        "startOffsets": "5963",
-                        "endColumns": "145",
-                        "endOffsets": "6104"
                     }
                 }
             ]

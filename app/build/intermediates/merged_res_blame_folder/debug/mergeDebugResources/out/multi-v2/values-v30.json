@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-v30/values-v30.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-v30/values-v30.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\5b114824bf1a0fbb6195297326287945\\transformed\\jetified-material3\\res\\values-v30\\values-v30.xml",

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-ky/values-ky.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-ky/values-ky.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\e1e70b2029614fb536ef96dae979d4a6\\transformed\\jetified-foundation-release\\res\\values-ky\\values-ky.xml",
@@ -52,6 +52,23 @@
                         "startOffsets": "3711,3811,3913,4016,4123,4225,4329,22027",
                         "endColumns": "99,101,102,106,101,103,110,100",
                         "endOffsets": "3806,3908,4011,4118,4220,4324,4435,22123"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\bd2d1e2817f52161e63602b73fb7fc16\\transformed\\jetified-play-services-basement-18.4.0\\res\\values-ky\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "153",
+                        "endOffsets": "348"
+                    },
+                    "to": {
+                        "startLines": "60",
+                        "startColumns": "4",
+                        "startOffsets": "5930",
+                        "endColumns": "157",
+                        "endOffsets": "6083"
                     }
                 },
                 {
@@ -122,23 +139,6 @@
                         "startOffsets": "7147,7759,7864,7973",
                         "endColumns": "98,104,108,105",
                         "endOffsets": "7241,7859,7968,8074"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\1f6fc9606446c032a3fa461cc4ffd32d\\transformed\\jetified-play-services-basement-18.5.0\\res\\values-ky\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "153",
-                        "endOffsets": "348"
-                    },
-                    "to": {
-                        "startLines": "60",
-                        "startColumns": "4",
-                        "startOffsets": "5930",
-                        "endColumns": "157",
-                        "endOffsets": "6083"
                     }
                 },
                 {

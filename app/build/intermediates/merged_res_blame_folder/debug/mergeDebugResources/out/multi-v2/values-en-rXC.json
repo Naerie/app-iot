@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\6964be2ec27ae5db086f701d63e38f4d\\transformed\\jetified-ui-release\\res\\values-en-rXC\\values-en-rXC.xml",

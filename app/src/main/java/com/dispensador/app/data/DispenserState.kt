@@ -5,22 +5,22 @@ package com.dispensador.app.data
  * Combina información de conexión, estado operativo y niveles
  */
 data class DispenserState(
-    val conexion: Boolean = false,
-    val encendido: Boolean = false,
+    val conexion: Boolean = true,
+    val encendido: Boolean = true,
     val enUso: Boolean = false,
-    val nivelAgua: Int = 100,
-    val tazaPresente: Boolean = false,
+    val nivelAgua: Int = 20,
+    val tazaPresente: Boolean = true,
     val intensidadWifi: Int = 0,
     val ultimaActualizacion: Long = 0L,
     val modo: String = "manual" // "manual" o "automatico"
 ) {
     // Constructor sin argumentos requerido por Firebase
     constructor() : this(
-        conexion = false,
-        encendido = false,
+        conexion = true,
+        encendido = true,
         enUso = false,
-        nivelAgua = 100,
-        tazaPresente = false,
+        nivelAgua = 20,
+        tazaPresente = true,
         intensidadWifi = 0,
         ultimaActualizacion = 0L,
         modo = "manual"

@@ -1,8 +1,25 @@
 {
     "logs": [
         {
-            "outputFile": "com.dispensador.app-mergeDebugResources-64:/values-hi/values-hi.xml",
+            "outputFile": "com.dispensador.app-mergeDebugResources-62:/values-hi/values-hi.xml",
             "map": [
+                {
+                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\bd2d1e2817f52161e63602b73fb7fc16\\transformed\\jetified-play-services-basement-18.4.0\\res\\values-hi\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "195",
+                        "endColumns": "141",
+                        "endOffsets": "336"
+                    },
+                    "to": {
+                        "startLines": "60",
+                        "startColumns": "4",
+                        "startOffsets": "5898",
+                        "endColumns": "145",
+                        "endOffsets": "6039"
+                    }
+                },
                 {
                     "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\52d1a6d2aa19fd7d5f411663b5ea0b84\\transformed\\jetified-credentials-1.2.0-rc01\\res\\values-hi\\values-hi.xml",
                     "from": {
@@ -35,23 +52,6 @@
                         "startOffsets": "3634,3732,3835,3940,4041,4154,4260,21881",
                         "endColumns": "97,102,104,100,112,105,126,100",
                         "endOffsets": "3727,3830,3935,4036,4149,4255,4382,21977"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maria\\.gradle\\caches\\8.11.1\\transforms\\1f6fc9606446c032a3fa461cc4ffd32d\\transformed\\jetified-play-services-basement-18.5.0\\res\\values-hi\\values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "195",
-                        "endColumns": "141",
-                        "endOffsets": "336"
-                    },
-                    "to": {
-                        "startLines": "60",
-                        "startColumns": "4",
-                        "startOffsets": "5898",
-                        "endColumns": "145",
-                        "endOffsets": "6039"
                     }
                 },
                 {

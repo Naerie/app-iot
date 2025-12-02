@@ -1,0 +1,4 @@
+com.dispensador.app.test.app-androidTest-0 C:\Users\maria\Desktop\DispensadorAguaApp\app-iot\app\build\generated\res\resValues\androidTest\debug
+com.dispensador.app.test.app-mergeDebugAndroidTestResources-1 C:\Users\maria\Desktop\DispensadorAguaApp\app-iot\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.dispensador.app.test.app-mergeDebugAndroidTestResources-2 C:\Users\maria\Desktop\DispensadorAguaApp\app-iot\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.dispensador.app.test.app-debugAndroidTest-3 C:\Users\maria\Desktop\DispensadorAguaApp\app-iot\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
